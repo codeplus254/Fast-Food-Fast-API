@@ -2,7 +2,7 @@
 
 from flask import Flask
 from flask import request,send_file
-
+import pytest
 
 APP = Flask(__name__)
 
@@ -131,8 +131,7 @@ def orders():
                     <input type="submit" value="Submit"><br>
                   </form>
             </html>'''
-#def test_orders(client,app):
-     #assertEqual( client.get('/api/v1/orders').status_code, 400)
+
     
 @APP.route('/api/v1/orders/<int:orderId>', methods=['GET', 'PUT'])
 def show_order(orderId):
@@ -198,4 +197,13 @@ def show_order(orderId):
             return "Invalid! Please check your order id"
     elif request.method == 'PUT':   
         return "Put request filed"
-        
+
+#def test_orders(client,app):
+     #assertEqual( client.get('/api/v1/orders').status_code, 400)
+
+def test_APP(client):
+    assert client.get(url_for('/api/v1/orders')).status_code == 200
+    assert client.get(url_for('/api/v1/orders/<int:orderId>')).status_code == 200
+@pytest.mark.options(debug=False)
+def test_app(app):
+    assert not app.debug, 'Ensure the app not in debug mode'
