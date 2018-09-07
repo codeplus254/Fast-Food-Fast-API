@@ -136,7 +136,7 @@ def orders():
 def show_order(orderId):
     """when the user of the api goes to <url>/orders s/he gets an input form"""
     """Place an order for food"""
-     '''<html>
+    '''<html>
         <form method="POST" action="https://fast-food-fast-api-v1.herokuapp.com/api/v1/orders/<int:orderId>">
             <input type="hidden" name="_METHOD" value="PUT"/>
             <h3> Confirm / Reject Order </h3>
@@ -203,4 +203,4 @@ def test_APP(client):
     assert client.get(url_for('/api/v1/orders/<int:orderId>')).status_code == 200
 @pytest.mark.options(debug=False)
 def test_app(app):
-    assert not app.debug, 'Ensure the app not in debug mode
+    assert not app.debug, 'Ensure the app not in debug mode'
