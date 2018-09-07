@@ -7,16 +7,16 @@ from flask import request,send_file
 APP = Flask(__name__)
 
 
-@APP.route('/')
+@APP.route('https://fast-food-fast-api-v1.herokuapp.com/')
 def index():
     """This function shows the home page of the api"""
     return 'Fast Food Fast API'
 
-@APP.route('/api/v1/images')
+@APP.route('https://fast-food-fast-api-v1.herokuapp.com/api/v1/images')
 def get_images():
     return send_file('C:/Users/Ronny/fast-food-fast/static/images')
 
-@APP.route('/api/v1/orders', methods=['GET', 'POST'])
+@APP.route('https://fast-food-fast-api-v1.herokuapp.com/api/v1/orders', methods=['GET', 'POST'])
 def orders():
     """when the user of the api goes to <url>/orders s/he gets an input form"""
     """Place an order for food"""
@@ -86,7 +86,7 @@ def orders():
     else:
         
         return '''<html>
-                <form method="POST" action="http://localhost:5000/api/v1/orders">
+                <form method="POST" action="https://fast-food-fast-api-v1.herokuapp.com/api/v1/orders">
                     <h3> Place your order for food </h3>
                     <select name= "order1">
                         <option value=" " > </option>
@@ -134,12 +134,12 @@ def orders():
 #def test_orders(client,app):
      #assertEqual( client.get('/api/v1/orders').status_code, 400)
     
-@APP.route('/api/v1/orders/<int:orderId>', methods=['GET', 'PUT'])
+@APP.route('https://fast-food-fast-api-v1.herokuapp.com/api/v1/orders/<int:orderId>', methods=['GET', 'PUT'])
 def show_order(orderId):
     """when the user of the api goes to <url>/orders s/he gets an input form"""
     """Place an order for food"""
      '''<html>
-        <form method="POST" action="http://localhost:5000/api/v1/orders/<int:orderId>">
+        <form method="POST" action="https://fast-food-fast-api-v1.herokuapp.com/api/v1/orders/<int:orderId>">
             <input type="hidden" name="_METHOD" value="PUT"/>
             <h3> Confirm / Reject Order </h3>
                     <select name= "change">
