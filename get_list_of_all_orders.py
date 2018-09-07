@@ -198,9 +198,4 @@ def show_order(orderId):
         return "Put request filed"
         
 
-def test_APP(client):
-    assert client.get(url_for('/api/v1/orders')).status_code == 200
-    assert client.get(url_for('/api/v1/orders/<int:orderId>')).status_code == 200
-@pytest.mark.options(debug=False)
-def test_app(app):
-    assert not app.debug, 'Ensure the app not in debug mode'
+
