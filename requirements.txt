@@ -1,2 +1,2 @@
-pytest
-flask
+Flask==0.9
+pytest=>2.9.0
