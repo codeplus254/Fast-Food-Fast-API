@@ -1,5 +1,5 @@
 language: python
-  - "3.7"
-# command to install dependencies
-install:
-  - pip install -r requirements.txt
+python: "3.6.5"
+cache: pip
+install: pip install -r requirements.txt
+script: python test_orders.py
