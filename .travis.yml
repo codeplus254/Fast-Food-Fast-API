@@ -3,3 +3,9 @@ language: python
 # command to install dependencies
 install:
   - pip install -r requirements.txt
+
+script:
+    - pytest tests --cov=api --cov-report term-missing
+
+after_success:
+    - coveralls
