@@ -17,5 +17,7 @@ Update the status of an order.
 [![Coverage Status](https://coveralls.io/repos/github/codeplus254/Fast-Food-Fast-API/badge.svg?branch=master)](https://coveralls.io/github/codeplus254/Fast-Food-Fast-API?branch=master)
 
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/608657040a150d9fe104/maintainability)](https://codeclimate.com/github/codeplus254/Fast-Food-Fast-API/maintainability)
 
+[![Test Coverage](https://api.codeclimate.com/v1/badges/608657040a150d9fe104/test_coverage)](https://codeclimate.com/github/codeplus254/Fast-Food-Fast-API/test_coverage)
 

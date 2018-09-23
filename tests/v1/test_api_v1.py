@@ -28,14 +28,14 @@ def test_get_all_orders():
 def test_post_orders():
     response = tester.post('/api/v1/orders',
                                     content_type="application/json", data=json.dumps(
-                                        {
+                                        [{
                                             "id": 1,
                                             "name": "fries",
                                             "price": "100.00",
                                             "quantity": 1,
                                             "address" : "Andela",
                                             "contact" : "0720682290"
-                                        })
+                                        }])
                                     )
     assert b'{"address":["Andela"],"contact":["0720682290"],"id":[1],"name":["fries"],"price":["100.00"],"quantity":[1]}' in response.data
     assert response.status_code == 200   

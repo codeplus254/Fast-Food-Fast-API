@@ -1,12 +1,14 @@
 """This python file is responsible for showing all user orders"""
 
-from flask import Flask,request,send_file,jsonify
-import pytest
+from flask import Flask, request, jsonify
+
 
 
 APP = Flask(__name__)
 
-
+NAME_ERROR = {'status': 'failed!', 'message':'make a post request first'}
+INDEX_ERROR = {'status': 'failed!', 'message':'No such order exists! Check the order ID'}
+REQUESTED_DATA = []
 
 @APP.route('/')
 def index():
@@ -14,63 +16,69 @@ def index():
     return 'Fast Food Fast API'
 @APP.route('/api/v1/orders', methods=['GET', 'POST'])
 def orders():
-    """when the user of the api goes to <url>/api/v1/orders s/he gets the menu and selects. On submission, the user gets to see the selected items"""
- 
-    # treat POST request 
+    """when the user of the api goes to <url>/api/v1/orders s/he gets the menu and selects.
+    On submission, the user gets to see the selected items"""
     if request.method == 'POST':
-        global data,order_id,order_name,order_price,order_quantity,order_delivery_address,order_contact
-        data = request.get_json()
-        order_id = []
-        order_id.append(data['id']) 
-        order_name = []
-        order_name.append(data['name'])
-        order_price = []
-        order_price.append(data['price'])
-        order_quantity = []
-        order_quantity.append(data['quantity'])
-        order_delivery_address = []
-        order_delivery_address.append(data['address'])
-        order_contact = []
-        order_contact.append(data['contact'])
-        #return jsonify({'result': 'success'})
-        return jsonify({'name':order_name,'id':order_id,'price':order_price,'quantity' : order_quantity,'address': order_delivery_address,'contact':order_contact})
-    elif request.method == 'GET':
-        #data ={"id": "24", "price": "12.00","time": "1300h","address": "Nairobi CBD"}
-        try: 
-           return jsonify({'name':order_name,'id':order_id,'price':order_price,'quantity' : order_quantity,'address': order_delivery_address,'contact':order_contact})
+        REQUESTED_DATA.append(request.get_json())     #one can make more than one post request
+        global ORDER_ID, ORDER_CONTACT, ORDER_DELIVERY_ADDRESS
+        ORDER_ID, ORDER_CONTACT, ORDER_DELIVERY_ADDRESS = [], [], []
+        global ORDER_NAME, ORDER_PRICE, ORDER_QUANTITY
+        ORDER_NAME, ORDER_PRICE, ORDER_QUANTITY = [], [], []
+        for posted_requests in REQUESTED_DATA: #REQUESTED_DATA will be a list of list
+            for order in posted_requests:
+                ORDER_ID.append(order['id'])
+                ORDER_NAME.append(order['name'])
+                ORDER_PRICE.append(order['price'])
+                ORDER_QUANTITY.append(order['quantity'])
+                ORDER_DELIVERY_ADDRESS.append(order['address'])
+                ORDER_CONTACT.append(order['contact'])
+        return jsonify({'name':ORDER_NAME, 'id':ORDER_ID, 'price':ORDER_PRICE,
+                        'quantity' : ORDER_QUANTITY, 'address': ORDER_DELIVERY_ADDRESS,
+                        'contact':ORDER_CONTACT})
+    else:
+        try:
+            return jsonify({'name':ORDER_NAME, 'id':ORDER_ID, 'price':ORDER_PRICE,
+                            'quantity' : ORDER_QUANTITY, 'address': ORDER_DELIVERY_ADDRESS,
+                            'contact':ORDER_CONTACT})
 
         except NameError:
-            return jsonify({'status': 'failed!', 'message':'make a post request first'})
+            return jsonify(NAME_ERROR)
 
-@APP.route('/api/v1/orders/<int:orderId>', methods=['GET', 'PUT'])
-def show_order(orderId):
-    """when the user of the api goes to <url>/api/v1/orders/<int:orderId> s/he gets the specific order if it exists"""
+@APP.route('/api/v1/orders/<int:specific_order_id>', methods=['GET', 'PUT'])
+def show_order(specific_order_id):
+    """when the user of the api goes to <url>/api/v1/orders/<int:specific_order_id> s/he gets
+    the specific order if it exists"""
     if request.method == 'GET':
         try:
-            if type(order_id) == list:
+            if isinstance(ORDER_ID, list):
 
-                return jsonify({'name':order_name[orderId-1],'id':order_id[orderId-1],'price':order_price[orderId-1],'quantity' : order_quantity[orderId-1],'address': order_delivery_address[orderId-1],'contact':order_contact[orderId-1]})
-        except TypeError:   #incase the order posted is just one hencenot subscriptable
-            
-            return jsonify({'name':order_name,'id':order_id,'price':order_price,'quantity' : order_quantity,'address': order_delivery_address,'contact':order_contact})
+                return jsonify({'name':ORDER_NAME[specific_order_id-1],
+                                'id':ORDER_ID[specific_order_id-1],
+                                'price':ORDER_PRICE[specific_order_id-1],
+                                'quantity' : ORDER_QUANTITY[specific_order_id-1],
+                                'address': ORDER_DELIVERY_ADDRESS[specific_order_id-1],
+                                'contact':ORDER_CONTACT[specific_order_id-1]})
         except NameError:
-            return jsonify({'status': 'failed!', 'message':'make a post request first'})
+            return jsonify(NAME_ERROR)
         except IndexError:
-            return jsonify({'status': 'failed!', 'message':'No such order exists! Check the order ID'})
+            return jsonify(INDEX_ERROR)
     elif request.method == 'PUT':
         try:
-            order_name[orderId-1] = request.json['name']
-            order_price[orderId-1] = request.json['price']
-            order_quantity[orderId-1] = request.json['quantity']
-            order_delivery_address[orderId-1] = request.json['address']
-            order_contact[orderId-1]= request.json['contact']
-            
-            return jsonify({'name':order_name[orderId-1],'id':order_id[orderId-1],'price':order_price[orderId-1],'quantity' : order_quantity[orderId-1],'address': order_delivery_address[orderId-1],'contact':order_contact[orderId-1]})
-        
+            ORDER_NAME[specific_order_id-1] = request.json['name']
+            ORDER_PRICE[specific_order_id-1] = request.json['price']
+            ORDER_QUANTITY[specific_order_id-1] = request.json['quantity']
+            ORDER_DELIVERY_ADDRESS[specific_order_id-1] = request.json['address']
+            ORDER_CONTACT[specific_order_id-1] = request.json['contact']
+            return jsonify({'name':ORDER_NAME[specific_order_id-1],
+                            'id':ORDER_ID[specific_order_id-1],
+                            'price':ORDER_PRICE[specific_order_id-1],
+                            'quantity' : ORDER_QUANTITY[specific_order_id-1],
+                            'address': ORDER_DELIVERY_ADDRESS[specific_order_id-1],
+                            'contact':ORDER_CONTACT[specific_order_id-1]})
         except NameError:
-            return jsonify({'status': 'failed!', 'message':'make a post request first'})
+            return jsonify(NAME_ERROR)
         except IndexError:
-            return jsonify({'status': 'failed!', 'message':'No such order exists! Check the order ID'})
+            return jsonify(INDEX_ERROR)
 
-if __name__=='__main__':
-    APP.run(debug=True)
+if __name__ == '__main__':
+    APP.run(debug=False)
