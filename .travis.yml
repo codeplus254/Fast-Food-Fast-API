@@ -1,4 +1,5 @@
 language: python
+<<<<<<< HEAD
 python: "3.6.5"
 cache: pip
 install: pip install -r requirements.txt
@@ -6,3 +7,22 @@ script: python test_orders.py
 
 after success: 
  - coveralls
+||||||| merged common ancestors
+  - "3.7"
+# command to install dependencies
+install:
+  - pip install -r requirements.txt
+=======
+
+python: 
+    - "3.6"
+
+install:
+    - pip install -r requirements.txt
+
+script:
+    - pytest tests --cov=api --cov-report term-missing
+
+after_success:
+    - coveralls
+>>>>>>> 160706231-test-coverage
