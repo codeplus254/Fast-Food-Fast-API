@@ -80,5 +80,4 @@ def show_order(specific_order_id):
         except IndexError:
             return jsonify(INDEX_ERROR)
 
-if __name__ == '__main__':
-    APP.run(debug=False)
+
