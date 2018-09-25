@@ -28,7 +28,7 @@ A live version of this API has been hosted on Heroku
 
 ## Acknowledgments
 
-* Hat tip to #tem-titans 
+* Hat tip to #team-titans 
 * Thank you Paul Rimiru (Learning Facilitator Assistant at Andela) for the guidance
 
 
