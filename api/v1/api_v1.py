@@ -72,22 +72,23 @@ def show_order(specific_order_id):
             return jsonify(NAME_ERROR)
         except IndexError:
             return jsonify(INDEX_ERROR)
-    elif request.method == 'PUT':
-        try:
-            ORDER_NAME[specific_order_id-1] = request.json['name']
-            ORDER_PRICE[specific_order_id-1] = request.json['price']
-            ORDER_QUANTITY[specific_order_id-1] = request.json['quantity']
-            ORDER_DELIVERY_ADDRESS[specific_order_id-1] = request.json['address']
-            ORDER_CONTACT[specific_order_id-1] = request.json['contact']
-            return jsonify({'name':ORDER_NAME[specific_order_id-1],
-                            'id':ORDER_ID[specific_order_id-1],
-                            'price':ORDER_PRICE[specific_order_id-1],
-                            'quantity' : ORDER_QUANTITY[specific_order_id-1],
-                            'address': ORDER_DELIVERY_ADDRESS[specific_order_id-1],
-                            'contact':ORDER_CONTACT[specific_order_id-1]})
-        except NameError:
-            return jsonify(NAME_ERROR)
-        except IndexError:
-            return jsonify(INDEX_ERROR)
+    #elif request.method == 'PUT':
+    try:
+        #request.json will always be one order for put request[ideally].If not so the first will always be picked 
+        ORDER_NAME[specific_order_id-1] = request.json[0]['name']
+        ORDER_PRICE[specific_order_id-1] = request.json[0]['price']
+        ORDER_QUANTITY[specific_order_id-1] = request.json[0]['quantity']
+        ORDER_DELIVERY_ADDRESS[specific_order_id-1] = request.json[0]['address']
+        ORDER_CONTACT[specific_order_id-1] = request.json[0]['contact']
+        return jsonify({'name':ORDER_NAME[specific_order_id-1],
+                        'id':ORDER_ID[specific_order_id-1],
+                        'price':ORDER_PRICE[specific_order_id-1],
+                        'quantity' : ORDER_QUANTITY[specific_order_id-1],
+                        'address': ORDER_DELIVERY_ADDRESS[specific_order_id-1],
+                        'contact':ORDER_CONTACT[specific_order_id-1]})
+    except NameError:
+        return jsonify(NAME_ERROR)
+    except IndexError:
+        return jsonify(INDEX_ERROR)
 
 

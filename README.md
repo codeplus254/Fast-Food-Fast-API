@@ -11,6 +11,10 @@ This API has four end-points
 | POST /api/<api-version>/orders | Place a new order. | 
 | PUT /api/<api-version>/orders/<orderId> | Update the status of an order. |
 
+## aPI Documentation
+Here is a link to my postman API documentation.
+[API DOCUMENTATION](https://documenter.getpostman.com/view/5303268/RWaRM565)
+
 ## DEPLOYMENT
 A live version of this API has been hosted on Heroku
 [SEE LIVE VERSION](fast-food-fast-api-v1.herokuapp.com)
