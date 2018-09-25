@@ -12,7 +12,7 @@ This API has four end-points
 | PUT /api/<api-version>/orders/<orderId> | Update the status of an order. |
 
 ## aPI Documentation
-Here is al ink to my postman API documentation.
+Here is a link to my postman API documentation.
 [API DOCUMENTATION](https://documenter.getpostman.com/view/5303268/RWaRM565)
 
 ## DEPLOYMENT
