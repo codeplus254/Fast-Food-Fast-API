@@ -60,14 +60,10 @@ def test_get_specific_order():
 def test_put_specific_orders():
     response = tester.put('/api/v1/orders/1',
                                     content_type="application/json", data=json.dumps(
-                                        {
-                                            "name": "Pizza",
-                                            "price": "100.00",
-                                            "quantity": 2,
-                                            "address" : "Westlands",
-                                            "contact" : "0720682290"
-                                        })
-                                    )
+                                        [{
+                                            "status": "Pending"
+	                                    }]))
+                                    
     print(response.data)
     assert response.status_code == 200
    
