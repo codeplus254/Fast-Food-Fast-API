@@ -29,19 +29,13 @@ def test_get_all_orders():
 def test_post_orders():
     response = tester.post('/api/v1/orders',
                                     content_type="application/json", data=json.dumps(
-                                        [{
+                                        {
                                             "name": "fries",
                                             "price": "100.00",
                                             "quantity": 1,
                                             "address" : "Andela",
                                             "contact" : "0720682290"
-                                        },{
-                                            "name": "Pizza",
-                                            "price": "500.00",
-                                            "quantity": 1,
-                                            "address" : "Westlands",
-                                            "contact" : "0720682290"
-                                        }])
+                                        })
                                     )
     
     
@@ -60,9 +54,9 @@ def test_get_specific_order():
 def test_put_specific_orders():
     response = tester.put('/api/v1/orders/1',
                                     content_type="application/json", data=json.dumps(
-                                        [{
+                                        {
                                             "status": "Pending"
-	                                    }]))
+	                                    }))
                                     
     print(response.data)
     assert response.status_code == 200

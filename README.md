@@ -11,7 +11,7 @@ This API has four end-points
 | POST /api/<api-version>/orders | Place a new order. | 
 | PUT /api/<api-version>/orders/<orderId> | Update the status of an order. |
 
-## aPI Documentation
+## API Documentation
 Here is a link to my postman API documentation.
 [API DOCUMENTATION](https://documenter.getpostman.com/view/5303268/RWaRM565)
 
