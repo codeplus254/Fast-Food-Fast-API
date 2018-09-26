@@ -25,24 +25,28 @@ def orders():
         ORDER_ID, ORDER_CONTACT, ORDER_DELIVERY_ADDRESS = [], [], []
         global ORDER_NAME, ORDER_PRICE, ORDER_QUANTITY, ORDER_STATUS
         ORDER_NAME, ORDER_PRICE, ORDER_QUANTITY, ORDER_STATUS = [], [], [], []
-        for posted_requests in REQUESTED_DATA: #REQUESTED_DATA will be a list of list
-            for order in posted_requests:
-                CURRENT_ID+=1
-                ORDER_ID.append(CURRENT_ID)
-                ORDER_NAME.append(order['name'])
-                ORDER_PRICE.append(order['price'])
-                ORDER_QUANTITY.append(order['quantity'])
-                ORDER_DELIVERY_ADDRESS.append(order['address'])
-                ORDER_CONTACT.append(order['contact'])
-                ORDER_STATUS.append('New')
+        for order in REQUESTED_DATA: #user should only post one order
+            CURRENT_ID+=1
+            ORDER_ID.append(CURRENT_ID)
+            ORDER_NAME.append(order['name'])
+            ORDER_PRICE.append(order['price'])
+            ORDER_QUANTITY.append(order['quantity'])
+            ORDER_DELIVERY_ADDRESS.append(order['address'])
+            ORDER_CONTACT.append(order['contact'])
+            ORDER_STATUS.append('New')
         CURRENT_ID = 0 #reset
-                
-        return jsonify({'name':ORDER_NAME, 'id':ORDER_ID, 'price':ORDER_PRICE,
-                        'quantity' : ORDER_QUANTITY, 'address': ORDER_DELIVERY_ADDRESS,
-                        'contact':ORDER_CONTACT,'status':ORDER_STATUS})
+        return jsonify({'Request_Status': 'Success',
+                        'Message':'You have successfully posted this order.',
+                        'name':request.json['name'],
+                        'price':request.json['price'],
+                        'quantity' : request.json['quantity'],
+                        'address': request.json['address'],
+                        'contact':request.json['contact']})
     #else if request.method == 'GET'
     try:
         ALL_ORDERS = []
+        ALL_ORDERS.append({'Request_Status':'Success', 
+                        'Message':'You have successfully fetched all orders.'})
         for ids in range(1,len(ORDER_ID)+1):
             ALL_ORDERS.append({'name':ORDER_NAME[ids-1],
                         'id':ORDER_ID[ids-1],
@@ -51,8 +55,8 @@ def orders():
                         'address': ORDER_DELIVERY_ADDRESS[ids-1],
                         'contact':ORDER_CONTACT[ids-1],
                         'status':ORDER_STATUS[ids-1]}) 
-        return jsonify(ALL_ORDERS)
         
+        return jsonify(ALL_ORDERS)
     except NameError:
         return jsonify(NAME_ERROR)
 
@@ -64,7 +68,9 @@ def show_order(specific_order_id):
         try:
             if isinstance(ORDER_ID, list):
 
-                return jsonify({'name':ORDER_NAME[specific_order_id-1],
+                return jsonify({'Request_Status': 'Success',
+                                'Message':'You have successfully fetched an order with order_id: '+str(ORDER_ID[specific_order_id-1]),
+                                'name':ORDER_NAME[specific_order_id-1],
                                 'id':ORDER_ID[specific_order_id-1],
                                 'price':ORDER_PRICE[specific_order_id-1],
                                 'quantity' : ORDER_QUANTITY[specific_order_id-1],
@@ -78,8 +84,10 @@ def show_order(specific_order_id):
     #elif request.method == 'PUT':     #THIS UPDATES STATUS OF AN ORDER
     try:
         #request.json will always be one order for put request[ideally].If not so the first will always be picked 
-        ORDER_STATUS[specific_order_id-1] = request.json[0]['status']
-        return jsonify({'name':ORDER_NAME[specific_order_id-1],
+        ORDER_STATUS[specific_order_id-1] = request.json['status']
+        return jsonify({'Request_Status': 'Success',
+                        'Message':'You have successfully updated an order with order_id: '+str(ORDER_ID[specific_order_id-1]),
+                        'name':ORDER_NAME[specific_order_id-1],
                         'id':ORDER_ID[specific_order_id-1],
                         'price':ORDER_PRICE[specific_order_id-1],
                         'quantity' : ORDER_QUANTITY[specific_order_id-1],
