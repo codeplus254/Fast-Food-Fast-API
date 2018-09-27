@@ -71,7 +71,29 @@ def update_menu():
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
         return jsonify({"message": "Menu update not successful.","Error":error})
-    
+@APP.route('/api/v2/orders', methods=['GET'])
+@token_required
+@admin_true
+def get_all_orders():
+
+    conn = None
+    try:
+        conn = psycopg2.connect( host=hostname, user=username, password=password, dbname=database )
+
+        cur = conn.cursor()
+        query = "SELECT * FROM public.orders "
+            
+            
+        cur.execute(query)
+        rows = cur.fetchall()
+        cur.close()
+        # commit the changes
+        conn.commit()
+        conn.close()
+        return jsonify({"message": "Fetched all orders."})
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        return jsonify({"message": "Failed to fetch all orders","Error":error})   
 
 @APP.route('/api/v2/auth/signup', methods=['POST'])
 def signup():
