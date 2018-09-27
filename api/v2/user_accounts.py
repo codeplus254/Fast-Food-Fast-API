@@ -45,8 +45,37 @@ def admin_true(f):
             return jsonify({'message': 'token is invalid'})
         return f(*args,**kwargs)
     return decorated
-@APP.route('/api/v2/menu', methods=['POST'])
+@APP.route('/api/v2/menu', methods=['POST','GET'])
 @token_required
+def get_menu():
+    if request.method == 'GET':
+        conn = None
+        try:
+            # connect to the PostgreSQL server
+            conn = psycopg2.connect( host=hostname, user=username, password=password, dbname=database )
+            
+            cur = conn.cursor()
+            # create table one by one
+            query = "SELECT * FROM menu"
+            cur.execute(query)
+            orders = cur.fetchall()
+            query_number = "SELECT COUNT(*) FROM menu"
+            cur.execute(query_number)
+            number_of_orders = cur.fetchone()
+            cur.close()
+            MENU = []
+            MENU.append({"message": "Here's the menu.")
+            for i in range(number_of_orders[0]):
+                MENU.append({'meal_id':orders[i][0],
+                            'meal_name':orders[i][1]
+                            #,'meal_price':orders[i][2]
+                            })
+            # commit the changes
+            conn.commit()
+            conn.close()
+            return jsonify(MENU)
+        except (Exception, psycopg2.DatabaseError) as error:
+            return jsonify({"message": "Failed to get the menu"})
 @admin_true
 def update_menu():
     meal_name = request.json.get('meal_name')
