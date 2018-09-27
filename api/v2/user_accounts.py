@@ -30,17 +30,48 @@ def token_required(f):
             return jsonify({'message': 'token is invalid'})
         return f(*args,**kwargs)
     return decorated
+def admin_true(f):
+    @wraps(f)
+    def decorated(*args,**kwargs):
+        #token = request.args.get('token')
+        token = user_token
+        if not token:
+              return jsonify({'message': 'token is missing','token':token})
+        try:
+            payload = jwt.decode(token, secret_key)
+            if payload['admin'] == False:
+                return jsonify({'message': 'You do not have clearance status to access this page'})
+        except:
+            return jsonify({'message': 'token is invalid'})
+        return f(*args,**kwargs)
+    return decorated
 @APP.route('/api/v2/menu', methods=['POST'])
 @token_required
+@admin_true
 def update_menu():
-    return jsonify({"Message":"Hey admin"})
-    """try:
-        payload = jwt.decode(user_token, secret_key)
-        return jsonify({"Admin": payload['admin']})
-    except jwt.ExpiredSignatureError:
-        return jsonify({"Error": "Signature expired. Please log in again."})
-    except jwt.InvalidTokenError:
-        return jsonify({"Error": "Invalid token. Please log in again."})"""
+    meal_name = request.json.get('meal_name')
+    meal_price = request.json.get('meal_price')
+
+    conn = None
+    try:
+        conn = psycopg2.connect( host=hostname, user=username, password=password, dbname=database )
+
+        cur = conn.cursor()
+        query = "INSERT INTO public.menu (meal_name, meal_price) VALUES (%s,%s)"
+            
+        values = (meal_name,meal_price)
+            
+        cur.execute(query,values)
+        
+        cur.close()
+        # commit the changes
+        conn.commit()
+        conn.close()
+        return jsonify({"message": "Menu update successful."})
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        return jsonify({"message": "Menu update not successful.","Error":error})
+    
 
 @APP.route('/api/v2/auth/signup', methods=['POST'])
 def signup():
