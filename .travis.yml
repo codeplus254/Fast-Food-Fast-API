@@ -6,6 +6,7 @@ python:
 install:
     - pip install -r requirements.txt
 before_script:
+  - psql -c '-u postgres -h 127.0.0.1'
   - psql -c 'create database fast-food-fast-db;' -U postgres
 script:
     - pytest tests 
