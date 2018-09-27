@@ -16,7 +16,10 @@ database = os.getenv('DATABASENAME')
 salt = os.getenv('SALT')
 secret_key = os.getenv('SECRET_KEY') 
 user_token = None
+user_id = None
 from functools import wraps
+
+
 def token_required(f):
     @wraps(f)
     def decorated(*args,**kwargs):
@@ -45,6 +48,44 @@ def admin_true(f):
             return jsonify({'message': 'token is invalid'})
         return f(*args,**kwargs)
     return decorated
+
+
+
+
+
+@APP.route('/api/v2/users/orders', methods=['POST','GET'])
+@token_required
+def user_orders():
+    if request.method == 'POST':  #a user can place an order
+        meal_name = request.json.get('meal_name')
+        order_delivery_address = request.json.get('order_address')
+        order_quantity = request.json.get('order_quantity'),
+        order_contact = request.json.get('order_contact'),
+        conn = None
+        try:
+            conn = psycopg2.connect( host=hostname, user=username, password=password, dbname=database )
+
+            cur = conn.cursor()
+            #First let's get price for the meal from the MENU table
+            query_1 = "SELECT * FROM menu WHERE meal_name=%s"
+            cur.execute(query_1,meal_name)
+            meal_price = cur.fetchone()
+            #order_price = int(order_quantity)*meal_price[0]
+            query_2 = """INSERT INTO public.orders (order_price,order_delivery_address,order_quantity,
+                        order_contact,order_status,user_id, meal_name) VALUES (%s,%s,%s,%s,%s,%s,%s)"""
+                
+            values = (500, order_delivery_address, order_quantity,order_contact,"New",user_id,meal_price)
+                
+            cur.execute(query_2,values)
+            
+            cur.close()
+            conn.commit()
+            conn.close()
+            return jsonify({"message": "Order posted successfully."})
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            return jsonify({"message": "Unable to place order"})
+
 @APP.route('/api/v2/menu', methods=['GET'])
 @token_required
 def get_menu():
@@ -131,7 +172,7 @@ def signup():
     user_name = request.json.get('username')
     user_password = request.json.get('password')
     user_admin = request.json.get('admin')
-    global user_token
+    global user_token,user_id
     user_token = jwt.encode({'admin':user_admin,
                 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=15)}, 
                 secret_key)
@@ -186,13 +227,13 @@ def login():
     user_name = request.json.get('username')
     user_password = request.json.get('password')
     user_admin = request.json.get('admin')
-    global user_token
+    global user_token,user_id
     user_token = jwt.encode({'admin':user_admin,
-                'exp' : datetime.datetime.utcnow() + datetime.timedelta(seconds=15)}, 
+                'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=15)}, 
                 secret_key)
     
-    user = str(datetime.datetime.utcnow())+salt
-    user_id = hashlib.md5(user.encode())
+    #user = str(datetime.datetime.utcnow())+salt
+    #user_id = hashlib.md5(user.encode())
     passwd = user_password + salt
     user_passwd_hash = hashlib.md5(passwd.encode())
     
