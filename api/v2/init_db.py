@@ -21,8 +21,8 @@ def create_tables():
         """CREATE SCHEMA public""",
         """
         CREATE TABLE public.users (
-            user_id VARCHAR(255) PRIMARY KEY,
-            user_name VARCHAR(255) NOT NULL,
+            user_id VARCHAR(255),
+            user_name VARCHAR(255) PRIMARY KEY NOT NULL,
             user_password_hash VARCHAR(255) NOT NULL,
             user_type VARCHAR(15) NOT NULL,
             user_token VARCHAR(255)
@@ -30,8 +30,8 @@ def create_tables():
         """,
         """ CREATE TABLE public.menu (
             
-                meal_id SERIAL PRIMARY KEY,
-                meal_name VARCHAR(50) NOT NULL,
+                meal_id SERIAL ,
+                meal_name VARCHAR(50) PRIMARY KEY ,
                 meal_price DECIMAL(6,2) NOT NULL
                 )
         """,

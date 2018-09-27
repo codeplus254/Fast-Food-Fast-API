@@ -15,13 +15,72 @@ password = os.getenv('PASSWORD')
 database = os.getenv('DATABASENAME')
 salt = os.getenv('SALT')
 secret_key = os.getenv('SECRET_KEY') 
+user_token = None
+from functools import wraps
+def token_required(f):
+    @wraps(f)
+    def decorated(*args,**kwargs):
+        #token = request.args.get('token')
+        token = user_token
+        if not token:
+              return jsonify({'message': 'token is missing','token':token})
+        try:
+            admin = jwt.decode(token, secret_key) 
+        except:
+            return jsonify({'message': 'token is invalid'})
+        return f(*args,**kwargs)
+    return decorated
+def admin_true(f):
+    @wraps(f)
+    def decorated(*args,**kwargs):
+        #token = request.args.get('token')
+        token = user_token
+        if not token:
+              return jsonify({'message': 'token is missing','token':token})
+        try:
+            payload = jwt.decode(token, secret_key)
+            if payload['admin'] == False:
+                return jsonify({'message': 'You do not have clearance status to access this page'})
+        except:
+            return jsonify({'message': 'token is invalid'})
+        return f(*args,**kwargs)
+    return decorated
+@APP.route('/api/v2/menu', methods=['POST'])
+@token_required
+@admin_true
+def update_menu():
+    meal_name = request.json.get('meal_name')
+    meal_price = request.json.get('meal_price')
+
+    conn = None
+    try:
+        conn = psycopg2.connect( host=hostname, user=username, password=password, dbname=database )
+
+        cur = conn.cursor()
+        query = "INSERT INTO public.menu (meal_name, meal_price) VALUES (%s,%s)"
+            
+        values = (meal_name,meal_price)
+            
+        cur.execute(query,values)
+        
+        cur.close()
+        # commit the changes
+        conn.commit()
+        conn.close()
+        return jsonify({"message": "Menu update successful."})
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+        return jsonify({"message": "Menu update not successful.","Error":error})
+    
 
 @APP.route('/api/v2/auth/signup', methods=['POST'])
 def signup():
     user_name = request.json.get('username')
     user_password = request.json.get('password')
-    user_token = jwt.encode({'admin':True,
-                'exp' : datetime.datetime.utcnow() + datetime.timedelta(seconds=15)}, 
+    user_admin = request.json.get('admin')
+    global user_token
+    user_token = jwt.encode({'admin':user_admin,
+                'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=15)}, 
                 secret_key)
     
     user = str(datetime.datetime.utcnow())+salt
@@ -73,7 +132,9 @@ def signup():
 def login():
     user_name = request.json.get('username')
     user_password = request.json.get('password')
-    user_token = jwt.encode({'admin':True,
+    user_admin = request.json.get('admin')
+    global user_token
+    user_token = jwt.encode({'admin':user_admin,
                 'exp' : datetime.datetime.utcnow() + datetime.timedelta(seconds=15)}, 
                 secret_key)
     
@@ -101,10 +162,10 @@ def login():
     finally:
         if conn is not None:
             conn.close()
-    if isinstance(user_id,tuple) == False:
-        return jsonify({"Error":"Login failed", "message": "Please sign up"})
+    
     #else
-    return jsonify({"message": "Login successful"})
+    return jsonify({"message": "Login successful", "token":user_token.decode('UTF-8')})
+
 if __name__ == '__main__':
     APP.run(debug=True)
 
