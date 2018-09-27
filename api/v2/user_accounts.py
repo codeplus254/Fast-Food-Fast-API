@@ -45,7 +45,7 @@ def admin_true(f):
             return jsonify({'message': 'token is invalid'})
         return f(*args,**kwargs)
     return decorated
-@APP.route('/api/v2/menu', methods=['POST','GET'])
+@APP.route('/api/v2/menu', methods=['GET'])
 @token_required
 def get_menu():
     if request.method == 'GET':
@@ -64,7 +64,7 @@ def get_menu():
             number_of_orders = cur.fetchone()
             cur.close()
             MENU = []
-            MENU.append({"message": "Here's the menu.")
+            MENU.append({"message": "Here's the menu."})
             for i in range(number_of_orders[0]):
                 MENU.append({'meal_id':orders[i][0],
                             'meal_name':orders[i][1]
@@ -76,6 +76,8 @@ def get_menu():
             return jsonify(MENU)
         except (Exception, psycopg2.DatabaseError) as error:
             return jsonify({"message": "Failed to get the menu"})
+@APP.route('/api/v2/menu', methods=['POST'])
+@token_required
 @admin_true
 def update_menu():
     meal_name = request.json.get('meal_name')
@@ -99,7 +101,7 @@ def update_menu():
         return jsonify({"message": "Menu update successful."})
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
-        return jsonify({"message": "Menu update not successful.","Error":error})
+        return jsonify({"message": "Menu update not successful."})
 @APP.route('/api/v2/orders', methods=['GET'])
 @token_required
 @admin_true
