@@ -47,3 +47,10 @@ def test_post_orders():
     
     
     assert response.status_code == 200
+"""testing the /api/v2/orders GET request"""       
+def test_get_all_orders():
+    response = tester.get('/api/v2/orders')
+    assert response.status_code == 200
+    assert response.is_json == True
+    
+    
