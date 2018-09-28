@@ -70,13 +70,13 @@ def show_order(specific_order_id):
 
                 return jsonify({'Request_Status': 'Success',
                                 'Message':'You have successfully fetched an order with order_id: '+str(ORDER_ID[specific_order_id-1]),
-                                'name':ORDER_NAME[specific_order_id-1],
+                                'order_'+str(specific_order_id) : {'name':ORDER_NAME[specific_order_id-1],
                                 'id':ORDER_ID[specific_order_id-1],
                                 'price':ORDER_PRICE[specific_order_id-1],
                                 'quantity' : ORDER_QUANTITY[specific_order_id-1],
                                 'address': ORDER_DELIVERY_ADDRESS[specific_order_id-1],
                                 'contact':ORDER_CONTACT[specific_order_id-1],
-                                'status':ORDER_STATUS[specific_order_id-1]},)
+                                'status':ORDER_STATUS[specific_order_id-1]}})
         except NameError:
             return jsonify(NAME_ERROR)
         except IndexError:
@@ -87,13 +87,13 @@ def show_order(specific_order_id):
         ORDER_STATUS[specific_order_id-1] = request.json['status']
         return jsonify({'Request_Status': 'Success',
                         'Message':'You have successfully updated an order with order_id: '+str(ORDER_ID[specific_order_id-1]),
-                        'name':ORDER_NAME[specific_order_id-1],
+                        'order_'+str(specific_order_id):{'name':ORDER_NAME[specific_order_id-1],
                         'id':ORDER_ID[specific_order_id-1],
                         'price':ORDER_PRICE[specific_order_id-1],
                         'quantity' : ORDER_QUANTITY[specific_order_id-1],
                         'address': ORDER_DELIVERY_ADDRESS[specific_order_id-1],
                         'contact':ORDER_CONTACT[specific_order_id-1],
-                        'status':ORDER_STATUS[specific_order_id-1]})
+                        'status':ORDER_STATUS[specific_order_id-1]}})
     except NameError:
         return jsonify(NAME_ERROR)
     except IndexError:

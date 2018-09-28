@@ -7,7 +7,7 @@ import pytest
 
 
 
-from flask import request, url_for
+from flask import request, url_for,jsonify
 
 
 tester = APP.test_client()
@@ -38,9 +38,7 @@ def test_post_orders():
                                         })
                                     )
     
-    assert len(response.data) == {
-        "Message": "You have successfully posted this order."
-        }
+    #assert jsonify(response.data) == 'yes'
     assert response.status_code == 200   
 def test_get_all_orders_after_posting():
     response = tester.get('/api/v1/orders')
