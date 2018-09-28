@@ -30,7 +30,7 @@ def test_post_orders():
     response = tester.post('/api/v1/orders',
                                     content_type="application/json", data=json.dumps(
                                         {
-                                            "name": "fries",
+                                            "name": "Hamburger",
                                             "price": "100.00",
                                             "quantity": 1,
                                             "address" : "Andela",
@@ -38,7 +38,9 @@ def test_post_orders():
                                         })
                                     )
     
-    
+    assert len(response.data) == {
+        "Message": "You have successfully posted this order."
+        }
     assert response.status_code == 200   
 def test_get_all_orders_after_posting():
     response = tester.get('/api/v1/orders')
