@@ -114,6 +114,8 @@ def get_menu():
             return jsonify(MENU)
         except (Exception, psycopg2.DatabaseError) as error:
             return jsonify({"message": "Failed to get the menu"})
+
+"""Test whether an admin can post a update menu """
 @APP.route('/api/v2/menu', methods=['POST'])
 @token_required
 @admin_true
@@ -126,6 +128,9 @@ def update_menu():
         conn = psycopg2.connect( host=hostname, user=username, password=password, dbname=database )
 
         cur = conn.cursor()
+        #first check if the meal name exists
+
+        
         query = "INSERT INTO public.menu (meal_name, meal_price) VALUES (%s,%s)"
             
         values = (meal_name,meal_price)

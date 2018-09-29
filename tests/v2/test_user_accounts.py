@@ -40,8 +40,8 @@ def test_post_orders():
     response = tester.post('/api/v2/menu',
                                     content_type="application/json", data=json.dumps(
                                         {
-                                            "meal_name":"pizza",
-	                                        "meal_price":300.00
+                                            "meal_name":"samosa",
+	                                        "meal_price":50.00
                                         })
                                     )
     
