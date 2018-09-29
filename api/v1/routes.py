@@ -1,11 +1,9 @@
 """This python file is responsible for showing all user orders"""
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Blueprint
 
 
-
-APP = Flask(__name__)
-
+mod = Blueprint('v1', __name__)
 NAME_ERROR = {"status": "Failure", "Message":"Make a post request first"}
 INDEX_ERROR = {"status": "Failure", "Message":"No such order exists! Check the order ID"}
 REQUESTED_DATA = []
@@ -13,11 +11,9 @@ CURRENT_ID = 0
 ALL_ORDERS, ORDER_ID, ORDER_CONTACT, ORDER_DELIVERY_ADDRESS = [], [], [], []
 ORDER_NAME, ORDER_PRICE, ORDER_QUANTITY, ORDER_STATUS = [], [], [], []
 
-@APP.route('/')
-def index():
-    """This function shows the home page of the api"""
-    return 'Welcome to the Fast Food Fast API'
-@APP.route('/api/v1/orders', methods=['GET', 'POST'])
+
+
+@mod.route('/orders', methods=['GET', 'POST'])
 def orders():
     """when the user of the api goes to <url>/api/v1/orders s/he gets the menu and selects.
     On submission, the user gets to see the selected items"""
@@ -58,7 +54,7 @@ def orders():
                         'Message':'You have successfully fetched all orders.',
                         'orders':ALL_ORDERS})
 
-@APP.route('/api/v1/orders/<int:specific_order_id>', methods=['GET', 'PUT'])
+@mod.route('/orders/<int:specific_order_id>', methods=['GET', 'PUT'])
 def show_order(specific_order_id):
     """when the user of the api goes to <url>/api/v1/orders/<int:specific_order_id> s/he gets
     the specific order if it exists"""
