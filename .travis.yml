@@ -6,7 +6,7 @@ python:
 install:
     - pip install -r requirements.txt
 before_script:
-  - psql -c 'create database fast-food-fast-db;' -U postgres
+  - psql -c 'create database fast_food_fast;' -U postgres
 script:
     - pytest tests 
 services:
