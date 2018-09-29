@@ -1,6 +1,6 @@
 import sys
 #sys.path.insert(0,'C:/Users/Ronny/fast-food-fast')
-from api.v2.user_accounts import APP
+from api import APP
 import json
 from flask import jsonify
 import pytest 
@@ -23,6 +23,7 @@ def test_signup():
                                             "admin": 1
                                         })
                                         )
+    #assert response.data == 'yes'
     assert response.status_code == 200
 """testing the /api/v2/auth/login POST request""" 
 def test_login():
@@ -33,7 +34,8 @@ def test_login():
                                             "password":"password",
                                             "admin":1
                                         })
-                                        ) 
+                                        )
+    #assert response.data == 'yes' 
     assert response.status_code == 200                              
 """testing the /api/v2/menu POST request"""       
 def test_post_orders():

@@ -1,14 +1,14 @@
 """This python module is responsible for creatinng user accounts and login"""
 import sys
-sys.path.insert(0,'C:/Users/Ronny/fast-food-fast')
-from flask import Flask, jsonify, request, make_response
+#sys.path.insert(0,'C:/Users/Ronny/fast-food-fast')
+from flask import Flask, jsonify, request, make_response, Blueprint
 import jwt
-from api.v2.the_app import APP
 import datetime
 import os
 import psycopg2
 import hashlib
 
+mod = Blueprint('v2', __name__)
 hostname = os.getenv('HOSTNAME') 
 username = os.getenv('USERNAME')
 password = os.getenv('PASSWORD')
@@ -53,7 +53,7 @@ def admin_true(f):
 
 
 
-@APP.route('/api/v2/users/orders', methods=['POST','GET'])
+@mod.route('/users/orders', methods=['POST','GET'])
 @token_required
 def user_orders():
     if request.method == 'POST':  #a user can place an order
@@ -86,7 +86,7 @@ def user_orders():
             print(error)
             return jsonify({"message": "Unable to place order"})
 
-@APP.route('/api/v2/menu', methods=['GET'])
+@mod.route('/menu', methods=['GET'])
 @token_required
 def get_menu():
     if request.method == 'GET':
@@ -119,7 +119,7 @@ def get_menu():
             return jsonify({"message": "Failed to get the menu"})
 
 """Test whether an admin can post a update menu """
-@APP.route('/api/v2/menu', methods=['POST'])
+@mod.route('/menu', methods=['POST'])
 @token_required
 @admin_true
 def update_menu():
@@ -148,7 +148,7 @@ def update_menu():
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
         return jsonify({"message": "Menu update not successful."})
-@APP.route('/api/v2/orders', methods=['GET'])
+@mod.route('/orders', methods=['GET'])
 @token_required
 @admin_true
 def get_all_orders():
@@ -172,7 +172,7 @@ def get_all_orders():
         print(error)
         return jsonify({"message": "Failed to fetch all orders","Error":error})   
 
-@APP.route('/api/v2/auth/signup', methods=['POST'])
+@mod.route('/auth/signup', methods=['POST'])
 def signup():
     user_name = request.json.get('username')
     user_password = request.json.get('password')
@@ -227,7 +227,7 @@ def signup():
     if status == 0:
         return jsonify({"message": "Sign Up successful"})
     return jsonify({ "Error":"Sign UP failed", "message": "Please choose another user name"})
-@APP.route('/api/v2/auth/login', methods=['POST'])
+@mod.route('/auth/login', methods=['POST'])
 def login():
     user_name = request.json.get('username')
     user_password = request.json.get('password')

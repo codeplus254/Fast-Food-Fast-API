@@ -1,15 +1,9 @@
 """THis python module tests responses for api_v1.py file"""
 import json
-from api.v1.api_v1 import APP
+from api import APP
 
 TESTER = APP.test_client()
 
-def test_index():
-    """testing the / GET request for home page"""
-    response = TESTER.get('/')
-    print(response.status_code)
-    assert b'Fast Food Fast API' in response.data
-    assert response.status_code == 200
 def test_get_specific_order_before_posting():
     """testing the /api/v1/orders/<orderId> GET request before the post request is made"""
     response = TESTER.get('/api/v1/orders/1')
