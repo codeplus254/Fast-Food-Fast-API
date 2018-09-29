@@ -37,24 +37,24 @@ def orders():
         CURRENT_ID = 0 #reset
         return jsonify({'Request_Status': 'Success',
                         'Message':'You have successfully posted this order.',
-                        'name':request.json['name'],
+                       'order':{ 'name':request.json['name'],
                         'price':request.json['price'],
                         'quantity' : request.json['quantity'],
                         'address': request.json['address'],
-                        'contact':request.json['contact']})
+                        'contact':request.json['contact']}})
     #else if request.method == 'GET'
     try:
         ALL_ORDERS = []
         ALL_ORDERS.append({'Request_Status':'Success', 
                         'Message':'You have successfully fetched all orders.'})
         for ids in range(1,len(ORDER_ID)+1):
-            ALL_ORDERS.append({'name':ORDER_NAME[ids-1],
+            ALL_ORDERS.append({'order_'+str(ids) :{'name':ORDER_NAME[ids-1],
                         'id':ORDER_ID[ids-1],
                         'price':ORDER_PRICE[ids-1],
                         'quantity' : ORDER_QUANTITY[ids-1],
                         'address': ORDER_DELIVERY_ADDRESS[ids-1],
                         'contact':ORDER_CONTACT[ids-1],
-                        'status':ORDER_STATUS[ids-1]}) 
+                        'status':ORDER_STATUS[ids-1]}}) 
         
         return jsonify(ALL_ORDERS)
     except NameError:

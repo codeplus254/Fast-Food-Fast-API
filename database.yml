@@ -1,0 +1,8 @@
+test:
+  adapter: postgresql
+  encoding: unicode
+  #host: localhost #muse be comment
+  database: fast-food-fast-db
+  pool: 5
+  #username: postgres  #muse be comment
+  #password: postgres   #muse be comment
