@@ -6,17 +6,11 @@ python:
 install:
     - pip install -r requirements.txt
 before_script:
-  - psql -c 'create database travis_ci_test;' -U postgres
+  - psql -c 'create database fast-food-fast-db;' -U postgres
 script:
     - pytest tests 
 services:
   - postgresql
-addons:
-  postgresql: "10"
-  apt:
-    packages:
-    - postgresql-10
-    - postgresql-client-10
 env:
   global:
   - PGPORT=5433
