@@ -51,6 +51,8 @@ def admin_true(f):
 
 
 
+
+
 @APP.route('/api/v2/users/orders', methods=['POST','GET'])
 @token_required
 def user_orders():
@@ -83,6 +85,7 @@ def user_orders():
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
             return jsonify({"message": "Unable to place order"})
+
 @APP.route('/api/v2/menu', methods=['GET'])
 @token_required
 def get_menu():
@@ -144,7 +147,7 @@ def update_menu():
         return jsonify({"message": "Menu update successful."})
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
-        return jsonify({"message": "Menu update not successful.","Error":error})
+        return jsonify({"message": "Menu update not successful."})
 @APP.route('/api/v2/orders', methods=['GET'])
 @token_required
 @admin_true
