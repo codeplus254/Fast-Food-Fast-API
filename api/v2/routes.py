@@ -2,6 +2,7 @@
 import sys
 #sys.path.insert(0,'C:/Users/Ronny/fast-food-fast')
 from flask import Flask, jsonify, request, make_response, Blueprint
+from .users import Users
 import jwt
 import datetime
 import os
@@ -178,7 +179,17 @@ def signup():
     user_password = request.json.get('password')
     user_admin = request.json.get('admin')
     global user_token,user_id
-    user_token = jwt.encode({'admin':user_admin,
+    user = Users(request.json.get('username'), request.json.get('password'), request.json.get('admin'))
+    user.hash()
+    user.signup()
+    user.connect_db()
+    user_token = user.token
+    user_id = user.id
+    if user.status == 0:
+        return jsonify({"message": user.message})
+    return jsonify({"message": user.error})
+        
+    """user_token = jwt.encode({'admin':user_admin,
                 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=15)}, 
                 secret_key)
     
@@ -226,17 +237,24 @@ def signup():
             conn.close()
     if status == 0:
         return jsonify({"message": "Sign Up successful"})
-    return jsonify({ "Error":"Sign UP failed", "message": "Please choose another user name"})
+    return jsonify({ "Error":"Sign UP failed", "message": "Please choose another user name"})"""
 @mod.route('/auth/login', methods=['POST'])
 def login():
     user_name = request.json.get('username')
     user_password = request.json.get('password')
     user_admin = request.json.get('admin')
     global user_token,user_id
-    user_token = jwt.encode({'admin':user_admin,
-                'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=15)}, 
-                secret_key)
+    user = Users(request.json.get('username'), request.json.get('password'), request.json.get('admin'))
+    user.login()
+    user.connect_db()
+    user_token = user.token
+    user_id = user.id
+    if user.status == 0:
+        return jsonify({"message": user.message})
+    return jsonify({"message": user.error})
+        
     
+    """
     #user = str(datetime.datetime.utcnow())+salt
     #user_id = hashlib.md5(user.encode())
     passwd = user_password + salt
@@ -263,7 +281,7 @@ def login():
             conn.close()
     
     #else
-    return jsonify({"message": "Login successful", "token":user_token.decode('UTF-8')})
+    return jsonify({"message": "Login successful", "token":user_token.decode('UTF-8')})"""
 
 if __name__ == '__main__':
     APP.run(debug=True)
