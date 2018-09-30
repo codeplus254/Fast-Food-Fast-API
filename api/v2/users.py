@@ -54,10 +54,8 @@ class Users:
            
             cur = conn.cursor()
             if self.event == "Signup":
-                print("Executing query")
                 cur.execute(self.query_1,self.inputs_1)
                 rows = cur.fetchone()
-                print("User new")
                 #return jsonify({'user':rows[0]})
                 if rows[0] == 0: #user does not exist
                     cur.execute(self.query_2,self.inputs_2)
