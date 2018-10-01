@@ -71,11 +71,13 @@ class Users:
                        
                 cur.execute(self.query,self.inputs)
                 self.id = cur.fetchone()
-                if self.id == None:
+                if self.id == None:     #user id does not exist
                     self.status=1
+                    self.token = None
             cur.close()
         except (Exception, psycopg2.DatabaseError) as error:
             self.status = 1
+            self.token = None
             self.error = "Database error: "+str(error)
         finally:
             if conn is not None:

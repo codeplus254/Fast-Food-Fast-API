@@ -69,6 +69,7 @@ def user_orders():
         order.connect_db()
         if order.status == 0:
             return jsonify({"Message": order.message})
+        
         return jsonify({"Message": order.error,"Database Error": order.db_error })
     else:    #a user gets order history
         order = Orders(user_id)
@@ -100,8 +101,10 @@ def update_menu():
     menu.connect_db()
     if menu.status == 0:
         return jsonify({"Message": menu.message})
-    return jsonify({"Message": menu.error,"Database Error": menu.db_error })
-    
+    else:
+        if menu.db_error is not None:           #database error present
+            return jsonify({"Database Error": menu.db_error })
+        return jsonify({"Message": menu.error})
 @mod.route('/orders', methods=['GET'])
 @token_required
 @admin_true

@@ -24,6 +24,7 @@ class Menu:
     def connect_db(self):
         conn = None
         self.status = 0
+        self.db_error = None
         try:
             conn = psycopg2.connect( host=hostname, user=username, password=password, dbname=database )
 
