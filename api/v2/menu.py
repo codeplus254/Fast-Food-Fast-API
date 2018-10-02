@@ -48,12 +48,11 @@ class Menu:
             else: #user fetches menu
                 cur.execute(self.query)
                 self.meals = cur.fetchall()
-                print(len(self.meals))
                 self.MENU = []
                 for i in range(len(self.meals)):
                     self.MENU.append({'meal_id':self.meals[i][0],
                                 'meal_name':self.meals[i][1],
-                                'meal_price':str(self.meals[i][2])
+                                'meal_price':str(self.meals[i][2])     #Decimal type not JSON seriailzable
                                 })
                 cur.close()
                 # commit the changes

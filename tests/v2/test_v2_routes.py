@@ -23,10 +23,11 @@ def test_signup():
                                             "admin": 1
                                         })
                                         )
-    #assert response.data == 'yes'
+    assert "Sign Up successful" in json.loads(response.data)["Message"]
     assert response.status_code == 200
-"""testing the /api/v2/auth/login POST request""" 
+ 
 def test_login():
+    """testing the /api/v2/auth/login POST request"""
     response = tester.post('/api/v2/auth/login',
                                     content_type="application/json", data=json.dumps(
                                         {
@@ -35,25 +36,27 @@ def test_login():
                                             "admin":1
                                         })
                                         )
-    #assert response.data == 'yes' 
+    assert "Login successful" in json.loads(response.data)["Message"]
     assert response.status_code == 200                              
-"""testing the /api/v2/menu POST request"""       
-def test_post_orders():
+      
+def test_update_menu():
+    """testing the /api/v2/menu POST request""" 
     response = tester.post('/api/v2/menu',
                                     content_type="application/json", data=json.dumps(
                                         {
-                                          "meal_name":"Hotdog",
-                                           "meal_price":150.00
+                                          "meal_name":"Grilled Chicken",
+                                           "meal_price":650.00
 
                                         })
                                     )
     
-    
+    assert "Menu update successful." in json.loads(response.data)["Message"]
     assert response.status_code == 200
-"""testing the /api/v2/orders GET request"""       
+     
 def test_get_all_orders():
+    """testing the /api/v2/orders GET request""" 
     response = tester.get('/api/v2/orders')
     assert response.status_code == 200
     assert response.is_json == True
-    
+    assert "Successfully fetched all orders." in json.loads(response.data)["Message"]
     

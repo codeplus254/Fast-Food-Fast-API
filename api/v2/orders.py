@@ -9,6 +9,7 @@ class Orders:
     def __init__(self,user_id):
         self.user_id = user_id
     def place_order(self,name,address,quantity,contact):
+        """Place_order helps the user place an order"""
         self.name = name
         self.address = address
         self.quantity = quantity
@@ -21,11 +22,19 @@ class Orders:
         self.message = "Order placed successfully."
         self.error = "Unable to place order. The meal is not available"
     def order_history(self):
+        """Order_history helps the user see all his/her orders ever placed"""
         self.query_1 = "SELECT * FROM orders WHERE user_id=%s"
         self.input_1 = (self.user_id,) 
         self.event = "user_history"
         self.message = "Order history fetched successfully."
-        self.error = "Unable to fetch order history."     
+        self.error = "Unable to fetch order history."  
+    def get_all_orders(self):
+        """This function helps the admin see all orders placed"""
+        self.query = "SELECT * FROM public.orders"
+        self.message = "Successfully fetched all orders."
+        self.error = "Unable to fetch all orders"
+        self.event = "admin_get_all_orders"
+          
     def connect_db(self):
         self.status = 0
         conn = None
@@ -53,7 +62,7 @@ class Orders:
                 self.history = []
                 for i in range(len(self.orders)):
                     self.history.append({'order_id':self.orders[i][0],
-                                'order_price':self.orders[i][1],
+                                'order_price':str(self.orders[i][1]),
                                 'order_delivery_address':self.orders[i][2],
                                 'order_quantity':self.orders[i][3],
                                 'order_contact' :self.orders[i][4],
@@ -64,6 +73,22 @@ class Orders:
                 cur.close()
                 # commit the changes
                 conn.commit()
+                conn.close()
+            elif self.event == "admin_get_all_orders":
+                cur.execute(self.query)
+                self.orders = cur.fetchall()
+                self.ALL_ORDERS = []
+                for i in range(len(self.orders)):
+                    self.ALL_ORDERS.append({'order_id':self.orders[i][0],
+                                'order_price':self.orders[i][1],
+                                'order_delivery_address':self.orders[i][2],
+                                'order_quantity':self.orders[i][3],
+                                'order_contact':self.orders[i][4],
+                                'order_status':self.orders[i][5],
+                                'user_id':self.orders[i][6],
+                                'meal_name':self.orders[i][7]
+                                })
+                cur.close()
                 conn.close()
         except (Exception, psycopg2.DatabaseError) as error:
             self.status = 1
