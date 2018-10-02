@@ -109,8 +109,16 @@ def update_menu():
 @token_required
 @admin_true
 def get_all_orders():
-
-    conn = None
+    orders = Orders(user_id)
+    orders.get_all_orders()
+    orders.connect_db()
+    if orders.status == 0:
+        return jsonify({"Message": orders.message,"Orders":orders.ALL_ORDERS})
+    else:
+        if orders.db_error is not None:           #database error present
+            return jsonify({"Database Error": orders.db_error })
+        return jsonify({"Message": orders.error})
+    """conn = None
     try:
         conn = psycopg2.connect( host=hostname, user=username, password=password, dbname=database )
 
@@ -127,7 +135,7 @@ def get_all_orders():
         return jsonify({"message": "Fetched all orders."})
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
-        return jsonify({"message": "Failed to fetch all orders","Error":error})   
+        return jsonify({"message": "Failed to fetch all orders","Error":error})"""   
 
 @mod.route('/auth/signup', methods=['POST'])
 def signup():
@@ -142,8 +150,8 @@ def signup():
     user_token = user.token
     user_id = user.id
     if user.status == 0:
-        return jsonify({"message": user.message})
-    return jsonify({"message": user.error})
+        return jsonify({"Message": user.message})
+    return jsonify({"Message": user.error})
     
 @mod.route('/auth/login', methods=['POST'])
 def login():
@@ -157,8 +165,8 @@ def login():
     user_token = user.token
     user_id = user.id
     if user.status == 0:
-        return jsonify({"message": user.message})
-    return jsonify({"message": user.error})
+        return jsonify({"Message": user.message})
+    return jsonify({"Message": user.error})
         
 if __name__ == '__main__':
     APP.run(debug=True)
