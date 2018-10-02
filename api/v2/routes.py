@@ -2,6 +2,9 @@
 import sys
 #sys.path.insert(0,'C:/Users/Ronny/fast-food-fast')
 from flask import Flask, jsonify, request, make_response, Blueprint
+from .users import Users
+from .menu import Menu
+from .orders import Orders
 import jwt
 import datetime
 import os
@@ -59,64 +62,32 @@ def user_orders():
     if request.method == 'POST':  #a user can place an order
         meal_name = request.json.get('meal_name')
         order_delivery_address = request.json.get('order_address')
-        order_quantity = request.json.get('order_quantity'),
-        order_contact = request.json.get('order_contact'),
-        conn = None
-        try:
-            conn = psycopg2.connect( host=hostname, user=username, password=password, dbname=database )
-
-            cur = conn.cursor()
-            #First let's get price for the meal from the MENU table
-            query_1 = "SELECT * FROM menu WHERE meal_name=%s"
-            cur.execute(query_1,meal_name)
-            meal_price = cur.fetchone()
-            #order_price = int(order_quantity)*meal_price[0]
-            query_2 = """INSERT INTO public.orders (order_price,order_delivery_address,order_quantity,
-                        order_contact,order_status,user_id, meal_name) VALUES (%s,%s,%s,%s,%s,%s,%s)"""
-                
-            values = (500, order_delivery_address, order_quantity,order_contact,"New",user_id,meal_price)
-                
-            cur.execute(query_2,values)
-            
-            cur.close()
-            conn.commit()
-            conn.close()
-            return jsonify({"message": "Order posted successfully."})
-        except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
-            return jsonify({"message": "Unable to place order"})
-
+        order_quantity = request.json.get('order_quantity')
+        order_contact = request.json.get('order_contact')
+        order = Orders(user_id)
+        order.place_order(meal_name,order_delivery_address,order_quantity,order_contact)
+        order.connect_db()
+        if order.status == 0:
+            return jsonify({"Message": order.message})
+        
+        return jsonify({"Message": order.error,"Database Error": order.db_error })
+    else:    #a user gets order history
+        order = Orders(user_id)
+        order.order_history()
+        order.connect_db()
+        if order.status == 0:
+            return jsonify({"Message": order.message,"Orders":order.history})
+        return jsonify({"Message": order.error,"Database Error": order.db_error })
 @mod.route('/menu', methods=['GET'])
 @token_required
 def get_menu():
-    if request.method == 'GET':
-        conn = None
-        try:
-            # connect to the PostgreSQL server
-            conn = psycopg2.connect( host=hostname, user=username, password=password, dbname=database )
-            
-            cur = conn.cursor()
-            # create table one by one
-            query = "SELECT * FROM menu"
-            cur.execute(query)
-            orders = cur.fetchall()
-            query_number = "SELECT COUNT(*) FROM menu"
-            cur.execute(query_number)
-            number_of_orders = cur.fetchone()
-            cur.close()
-            MENU = []
-            MENU.append({"message": "Here's the menu."})
-            for i in range(number_of_orders[0]):
-                MENU.append({'meal_id':orders[i][0],
-                            'meal_name':orders[i][1]
-                            #,'meal_price':orders[i][2]
-                            })
-            # commit the changes
-            conn.commit()
-            conn.close()
-            return jsonify(MENU)
-        except (Exception, psycopg2.DatabaseError) as error:
-            return jsonify({"message": "Failed to get the menu"})
+    menu = Menu()
+    menu.get_menu()
+    menu.connect_db()
+    if menu.status == 0:
+        return jsonify({"Message": menu.message,"menu":menu.MENU})
+    return jsonify({"Message": menu.error,"Database Error": menu.db_error })
+   
 
 """Test whether an admin can post a update menu """
 @mod.route('/menu', methods=['POST'])
@@ -125,29 +96,15 @@ def get_menu():
 def update_menu():
     meal_name = request.json.get('meal_name')
     meal_price = request.json.get('meal_price')
-
-    conn = None
-    try:
-        conn = psycopg2.connect( host=hostname, user=username, password=password, dbname=database )
-
-        cur = conn.cursor()
-        #first check if the meal name exists
-
-        
-        query = "INSERT INTO public.menu (meal_name, meal_price) VALUES (%s,%s)"
-            
-        values = (meal_name,meal_price)
-            
-        cur.execute(query,values)
-        
-        cur.close()
-        # commit the changes
-        conn.commit()
-        conn.close()
-        return jsonify({"message": "Menu update successful."})
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-        return jsonify({"message": "Menu update not successful."})
+    menu = Menu()
+    menu.update_menu(request.json.get('meal_name'), request.json.get('meal_price'))
+    menu.connect_db()
+    if menu.status == 0:
+        return jsonify({"Message": menu.message})
+    else:
+        if menu.db_error is not None:           #database error present
+            return jsonify({"Database Error": menu.db_error })
+        return jsonify({"Message": menu.error})
 @mod.route('/orders', methods=['GET'])
 @token_required
 @admin_true
@@ -178,93 +135,31 @@ def signup():
     user_password = request.json.get('password')
     user_admin = request.json.get('admin')
     global user_token,user_id
-    user_token = jwt.encode({'admin':user_admin,
-                'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=15)}, 
-                secret_key)
+    user = Users(request.json.get('username'), request.json.get('password'), request.json.get('admin'))
+    user.hash()
+    user.signup()
+    user.connect_db()
+    user_token = user.token
+    user_id = user.id
+    if user.status == 0:
+        return jsonify({"message": user.message})
+    return jsonify({"message": user.error})
     
-    user = str(datetime.datetime.utcnow())+salt
-    user_id = hashlib.md5(user.encode())
-    passwd = user_password + salt
-    user_passwd_hash = hashlib.md5(passwd.encode())
-    
-    #db.session.add(user)
-    #db.session.commit()
-    conn = None
-    status = 0
-    try:
-        # read the connection parameters
-       
-        # connect to the PostgreSQL server
-        conn = psycopg2.connect( host=hostname, user=username, password=password, dbname=database )
-        
-        cur = conn.cursor()
-        # create table one by one
-        query_1 = "SELECT COUNT(*) FROM users WHERE user_name=%s AND user_password_hash=%s"
-        inputs = (user_name,user_passwd_hash.hexdigest())
-        
-        cur.execute(query_1,inputs)
-        rows = cur.fetchone()
-        #return jsonify({'user':rows})
-        if rows[0] == 0:
-            query = "INSERT INTO public.users (user_id, user_name, user_password_hash,user_type,user_token) VALUES (%s,%s,%s,%s,%s)"
-            
-            values = (user_id.hexdigest(),user_name,user_passwd_hash.hexdigest(), 'admin',user_token)
-            
-            cur.execute(query,values)
-            # close communication with the PostgreSQL database server
-            cur.close()
-            # commit the changes
-            conn.commit()
-            
-        else:
-            cur.close()
-            status = 1
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-    finally:
-        if conn is not None:
-            conn.close()
-    if status == 0:
-        return jsonify({"message": "Sign Up successful"})
-    return jsonify({ "Error":"Sign UP failed", "message": "Please choose another user name"})
 @mod.route('/auth/login', methods=['POST'])
 def login():
-    user_name = request.json.get('username')
-    user_password = request.json.get('password')
-    user_admin = request.json.get('admin')
+    #user_name = request.json.get('username')
+    #user_password = request.json.get('password')
+    #user_admin = request.json.get('admin')
     global user_token,user_id
-    user_token = jwt.encode({'admin':user_admin,
-                'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=15)}, 
-                secret_key)
-    
-    #user = str(datetime.datetime.utcnow())+salt
-    #user_id = hashlib.md5(user.encode())
-    passwd = user_password + salt
-    user_passwd_hash = hashlib.md5(passwd.encode())
-    
-    conn = None
-    try:
-        conn = psycopg2.connect( host=hostname, user=username, password=password, dbname=database )
-
-        cur = conn.cursor()
-        query = "SELECT user_id FROM users WHERE user_name=%s AND user_password_hash=%s"
-        values = (user_name,user_passwd_hash.hexdigest())
+    user = Users(request.json.get('username'), request.json.get('password'), request.json.get('admin'))
+    user.login()
+    user.connect_db()
+    user_token = user.token
+    user_id = user.id
+    if user.status == 0:
+        return jsonify({"message": user.message})
+    return jsonify({"message": user.error})
         
-        cur.execute(query,values)
-        user_id = cur.fetchone()
-        
-
-        cur.close()
-        
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-    finally:
-        if conn is not None:
-            conn.close()
-    
-    #else
-    return jsonify({"message": "Login successful", "token":user_token.decode('UTF-8')})
-
 if __name__ == '__main__':
     APP.run(debug=True)
 
