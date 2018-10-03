@@ -7,6 +7,7 @@ This API has nine end-points
 | Endpoint | Functionality |Note|
 |----------|---------------|----|
 |POST api/v2/auth/signup|Register a user| |
+|POST api/v2/admin|REgister an admin|Only an admin can access this page|
 |POST api/v2/auth/login|Login a user| |
 |POST api/v2/users/orders|Place an order for food.| |
 |GET api/v2/users/orders|Get the order history for a logged in user.| |

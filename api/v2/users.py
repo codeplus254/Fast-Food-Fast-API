@@ -15,31 +15,35 @@ user_token = None
 user_id = None
 
 class Users:
-    def __init__(self,name,password,admin):
+    def __init__(self,name,password,admin_status):
         self.name = name
         self.password = password
         passwd = self.password + salt
         self.passwd_hash = hashlib.md5(passwd.encode())
-        self.admin = admin
-        self.token = jwt.encode({'admin':admin,
+        self.admin = admin_status
+        self.token = jwt.encode({'admin':self.admin,
                 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=15)}, 
                 secret_key)
     def hash(self):
         sign_up_time = str(datetime.datetime.utcnow())+salt
         self.id = hashlib.md5(sign_up_time.encode())
-        
+    def admin_true(self):
+        self.admin = 1
+        self.token = jwt.encode({'admin':self.admin,
+                'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=15)}, 
+                secret_key)
 
     def signup(self):
         self.query_1 = """SELECT COUNT(*) FROM users WHERE user_name=%s;"""
         self.inputs_1 = (self.name,)
         self.query_2 = "INSERT INTO public.users (user_id, user_name, user_password_hash,user_type,user_token) VALUES (%s,%s,%s,%s,%s)"
-        self.inputs_2 = (self.id.hexdigest(),self.name,self.passwd_hash.hexdigest(), 'admin',self.token)
+        self.inputs_2 = (self.id.hexdigest(),self.name,self.passwd_hash.hexdigest(), 'user',self.token)
         self.message = "Sign Up successful"
         self.error = "Sign up failed. Please choose another user name."
         self.event = "Signup"      
     
     def login(self):
-        self.query = "SELECT user_id FROM users WHERE user_name=%s AND user_password_hash=%s"
+        self.query = "SELECT user_id,user_type FROM users WHERE user_name=%s AND user_password_hash=%s"
         self.inputs = (self.name,self.passwd_hash.hexdigest())
         self.message = "Login successful"
         self.event = "Login"    
@@ -63,14 +67,16 @@ class Users:
                     cur.close()
                     # commit the changes
                     conn.commit()
-                    print("User new")
                 else: #user already exists      
                     self.status = 1         #throw error since user exists
-                    print("User exists")
             else: #event is login
                        
                 cur.execute(self.query,self.inputs)
-                self.id = cur.fetchone()
+                result = cur.fetchall
+                self.id = result[0]
+                self.user_type = result[1]
+                if self.user_type == 'admin':
+                    admin_true()   #override the user token given and admin status given
                 if self.id == None:     #user id does not exist
                     self.status=1
                     self.token = None

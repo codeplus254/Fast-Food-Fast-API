@@ -1,12 +1,14 @@
-"""THis python module conects to the database and creates the tables if they do not exist"""
+"""THis python module conects to the database and creates the tables and sets an intial admin"""
 import psycopg2
 import os
+from .users import Users
 
 hostname = os.getenv('HOSTNAME') 
 username = os.getenv('USERNAME')
 password = os.getenv('PASSWORD')
 database = os.getenv('DATABASENAME')
-
+admin_name = os.getenv('ADMIN_NAME')
+admin_password = os.getenv('ADMIN_PASSWORD')
 
  
  
@@ -67,7 +69,18 @@ def create_tables():
     finally:
         if conn is not None:
             conn.close()
-    
+def create_admin():
+    global user_token,user_id
+    user = Users(admin_name, admin_password, 1)
+    user.hash()
+    user.signup()
+    user.connect_db()
+    user_token = user.token
+    user_id = user.id
+    if user.status == 0:
+        return jsonify({"Message": user.message})
+    return jsonify({"Message": user.error})  
  
-if __name__ == '__main__':
-    create_tables()
+
+create_tables()
+create_admin()
