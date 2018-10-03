@@ -1,7 +1,9 @@
 """THis python module conects to the database and creates the tables and sets an intial admin"""
+import sys
+sys.path.insert(0,'/home/andela/Fast-Food-Fast-API')
 import psycopg2
 import os
-from .users import Users
+#from .users import Users
 
 hostname = os.getenv('HOSTNAME') 
 username = os.getenv('USERNAME')
@@ -22,7 +24,7 @@ def create_tables():
         """drop schema public cascade""",
         """CREATE SCHEMA public""",
         """
-        CREATE TABLE public.users (
+        CREATE TABLE users (
             user_id VARCHAR(255) UNIQUE,
             user_name VARCHAR(255) PRIMARY KEY ,
             user_password_hash VARCHAR(255) NOT NULL,
@@ -30,14 +32,14 @@ def create_tables():
             user_token VARCHAR(255)
         )
         """,
-        """ CREATE TABLE public.menu (
+        """ CREATE TABLE menu (
             
                 meal_id SERIAL UNIQUE ,
                 meal_name VARCHAR(50) PRIMARY KEY ,
                 meal_price DECIMAL(6,2) NOT NULL
                 )
         """,
-        """ CREATE TABLE public.orders (
+        """ CREATE TABLE orders (
             
                 order_id SERIAL PRIMARY KEY,
                 order_price DECIMAL(6,2) NOT NULL,
@@ -83,4 +85,4 @@ def create_admin():
  
 
 create_tables()
-create_admin()
+#create_admin()

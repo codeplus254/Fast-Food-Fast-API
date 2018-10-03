@@ -29,9 +29,10 @@ def token_required(f):
         #token = request.args.get('token')
         token = user_token
         if not token:
-              return jsonify({'message': 'token is missing','token':token})
+              return jsonify({'message': 'token is missing','token':token}), 401
         try:
             admin = jwt.decode(token, secret_key) 
+            return jsonify({'message': 'token is missing','token':token})
         except:
             return jsonify({'message': 'token is invalid'})
         return f(*args,**kwargs)
@@ -39,7 +40,7 @@ def token_required(f):
 def admin_true(f):
     @wraps(f)
     def decorated(*args,**kwargs):
-        #token = request.args.get('token')
+         #token = request.args.get('token')
         token = user_token
         if not token:
               return jsonify({'message': 'token is missing','token':token})
