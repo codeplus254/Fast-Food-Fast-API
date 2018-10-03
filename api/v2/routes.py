@@ -105,7 +105,7 @@ def update_menu():
         if menu.db_error is not None:           #database error present
             return jsonify({"Database Error": menu.db_error })
         return jsonify({"Message": menu.error})
-@mod.route('/orders/', methods=['GET'])
+@mod.route('/orders', methods=['GET'])
 @token_required
 @admin_true
 def get_all_orders():

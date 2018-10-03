@@ -13,13 +13,15 @@ This API has nine end-points
 |GET api/v2/orders|Get all orders|Only Admin (caterer) should have access to this route| |
 |GET api/v2/orders/orderId|Fetch a specific order|orderId is an integer
 Only Admin (caterer) should have access to this route|
-|PUT api/v2/orders/orderId| |Only Admin (caterer) should have access to this route. The Status of an order could either be New, Processing, Cancelled or Complete. orderid is an integer|
+|PUT api/v2/orders/orderId| |Only Admin (caterer) should have access to this route.
+The status of an order could either be New, Processing, Cancelled
+ or Complete. orderid is an integer|
 |GET /menu|Get available menu| |
 |POST /menu|Add a meal option to the menu.| Only Admin (caterer) should have access to this route|
 
 ## API Documentation
 Here is a link to my postman API documentation.
-[API DOCUMENTATION](https://documenter.getpostman.com/view/5303268/RWaRM565)
+[API DOCUMENTATION](https://documenter.getpostman.com/view/5303268/RWgm41ZX)
 
 ## DEPLOYMENT
 A live version of this API has been hosted on Heroku
@@ -39,7 +41,7 @@ A live version of this API has been hosted on Heroku
 ## Acknowledgments
 
 * Hat tip to #team-titans and #team-thanos  
-* Thank you Paul Rimiru (Week 1 Learning Facilitator Assistant at Andela) and Michael Mutoro for the continued feedback
+* Thank you Paul Rimiru (Week 1 Learning Facilitator Assistant at Andela) and Michael Mutoro (Week 2 Learning Facilitator Assistant at Andela) for the continued feedback
 
 
 
