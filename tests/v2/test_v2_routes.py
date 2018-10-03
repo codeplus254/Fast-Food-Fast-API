@@ -60,3 +60,8 @@ def test_get_all_orders():
     assert response.is_json == True
     assert "Successfully fetched all orders." in json.loads(response.data)["Message"]
     
+def test_get_specific_order():
+    """Testing the .api/v2/orders/<orderId> GET request"""
+    response = tester.get('/api/v2/orders/1')
+    assert response.status_code == 200
+    #assert "Successfully fetched the order." in json.loads(response.data)["Message"]

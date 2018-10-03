@@ -73,7 +73,7 @@ def user_orders():
         return jsonify({"Message": order.error,"Database Error": order.db_error })
     else:    #a user gets order history
         order = Orders(user_id)
-        order.order_history()
+        order.user_history()
         order.connect_db()
         if order.status == 0:
             return jsonify({"Message": order.message,"Orders":order.history})
@@ -118,24 +118,19 @@ def get_all_orders():
         if orders.db_error is not None:           #database error present
             return jsonify({"Database Error": orders.db_error })
         return jsonify({"Message": orders.error})
-    """conn = None
-    try:
-        conn = psycopg2.connect( host=hostname, user=username, password=password, dbname=database )
-
-        cur = conn.cursor()
-        query = "SELECT * FROM public.orders "
-            
-            
-        cur.execute(query)
-        rows = cur.fetchall()
-        cur.close()
-        # commit the changes
-        conn.commit()
-        conn.close()
-        return jsonify({"message": "Fetched all orders."})
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-        return jsonify({"message": "Failed to fetch all orders","Error":error})"""   
+@mod.route('/orders/<int:specific_order_id>', methods=['GET'])
+@token_required
+@admin_true
+def get_specific_order(specific_order_id):
+    order = Orders(user_id)
+    order.get_specific_order(specific_order_id)
+    order.connect_db()
+    if order.status == 0:
+        return jsonify({"Message": order.message,"Order":order.specific_order})
+    else:
+        if order.db_error is not None:           #database error present
+            return jsonify({"Database Error": order.db_error })
+        return jsonify({"Message": order.error})  
 
 @mod.route('/auth/signup', methods=['POST'])
 def signup():
