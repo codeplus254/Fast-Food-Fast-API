@@ -24,6 +24,7 @@ class Users:
         self.token = jwt.encode({'admin':admin,
                 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=15)}, 
                 secret_key)
+        
     def hash(self):
         sign_up_time = str(datetime.datetime.utcnow())+salt
         self.id = hashlib.md5(sign_up_time.encode())
@@ -42,7 +43,8 @@ class Users:
         self.query = "SELECT user_id FROM users WHERE user_name=%s AND user_password_hash=%s"
         self.inputs = (self.name,self.passwd_hash.hexdigest())
         self.message = "Login successful"
-        self.event = "Login"    
+        self.event = "Login" 
+        self.error = "Login error"   
     def connect_db(self):
     
         conn = None

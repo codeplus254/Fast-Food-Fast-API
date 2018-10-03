@@ -29,9 +29,10 @@ def token_required(f):
         #token = request.args.get('token')
         token = user_token
         if not token:
-              return jsonify({'message': 'token is missing','token':token})
+              return jsonify({'message': 'token is missing','token':token}), 401
         try:
             admin = jwt.decode(token, secret_key) 
+            return jsonify({'message': 'token is missing','token':token})
         except:
             return jsonify({'message': 'token is invalid'})
         return f(*args,**kwargs)
@@ -39,7 +40,7 @@ def token_required(f):
 def admin_true(f):
     @wraps(f)
     def decorated(*args,**kwargs):
-        #token = request.args.get('token')
+         #token = request.args.get('token')
         token = user_token
         if not token:
               return jsonify({'message': 'token is missing','token':token})
@@ -148,9 +149,9 @@ def specific_order(specific_order_id):
 def signup():
     user_name = request.json.get('username')
     user_password = request.json.get('password')
-    user_admin = request.json.get('admin')
+    user_admin = 0
     global user_token,user_id
-    user = Users(request.json.get('username'), request.json.get('password'), request.json.get('admin'))
+    user = Users(request.json.get('username'), request.json.get('password'),0)
     user.hash()
     user.signup()
     user.connect_db()
@@ -166,11 +167,27 @@ def login():
     #user_password = request.json.get('password')
     #user_admin = request.json.get('admin')
     global user_token,user_id
-    user = Users(request.json.get('username'), request.json.get('password'), request.json.get('admin'))
+    user = Users(request.json.get('username'), request.json.get('password'), 0)
     user.login()
     user.connect_db()
     user_token = user.token
     user_id = user.id
+    if user.status == 0:
+        return jsonify({"Message": user.message})
+    return jsonify({"Message": user.error})
+
+@mod.route('/admin', methods=['POST'])
+@token_required
+@admin_true
+def signup_admin():
+    user_name = request.json.get('username')
+    user_password = request.json.get('password')
+    user_admin = request.json.get('admin')
+    user = Users(request.json.get('username'), request.json.get('password'),request.json.get('admin'))
+    user.hash()
+    user.admin_token() #overrides the user token given above
+    user.signup()
+    user.connect_db()
     if user.status == 0:
         return jsonify({"Message": user.message})
     return jsonify({"Message": user.error})

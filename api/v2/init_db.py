@@ -1,12 +1,16 @@
-"""THis python module conects to the database and creates the tables if they do not exist"""
+"""THis python module conects to the database and creates the tables and sets an intial admin"""
+import sys
+sys.path.insert(0,'/home/andela/Fast-Food-Fast-API')
 import psycopg2
 import os
+#from .users import Users
 
 hostname = os.getenv('HOSTNAME') 
 username = os.getenv('USERNAME')
 password = os.getenv('PASSWORD')
 database = os.getenv('DATABASENAME')
-
+admin_name = os.getenv('ADMIN_NAME')
+admin_password = os.getenv('ADMIN_PASSWORD')
 
  
  
@@ -20,7 +24,7 @@ def create_tables():
         """drop schema public cascade""",
         """CREATE SCHEMA public""",
         """
-        CREATE TABLE public.users (
+        CREATE TABLE users (
             user_id VARCHAR(255) UNIQUE,
             user_name VARCHAR(255) PRIMARY KEY ,
             user_password_hash VARCHAR(255) NOT NULL,
@@ -28,14 +32,14 @@ def create_tables():
             user_token VARCHAR(255)
         )
         """,
-        """ CREATE TABLE public.menu (
+        """ CREATE TABLE menu (
             
                 meal_id SERIAL UNIQUE ,
                 meal_name VARCHAR(50) PRIMARY KEY ,
                 meal_price DECIMAL(6,2) NOT NULL
                 )
         """,
-        """ CREATE TABLE public.orders (
+        """ CREATE TABLE orders (
             
                 order_id SERIAL PRIMARY KEY,
                 order_price DECIMAL(6,2) NOT NULL,
@@ -67,7 +71,18 @@ def create_tables():
     finally:
         if conn is not None:
             conn.close()
-    
+def create_admin():
+    global user_token,user_id
+    user = Users(admin_name, admin_password, 1)
+    user.hash()
+    user.signup()
+    user.connect_db()
+    user_token = user.token
+    user_id = user.id
+    if user.status == 0:
+        return jsonify({"Message": user.message})
+    return jsonify({"Message": user.error})  
  
-if __name__ == '__main__':
-    create_tables()
+
+create_tables()
+#create_admin()
