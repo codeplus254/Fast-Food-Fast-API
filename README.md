@@ -2,14 +2,20 @@
 Fast-Food-Fast is a food delivery service app for a restaurant.
 
 ## API endpoints
-This API has four end-points
+This API has nine end-points
 
-| Endpoint | Functionality |
-|----------|---------------|
-| GET /api/<api-version>/orders | Get all the orders. |
-| GET /api/<api-version>/orders/<orderId> | Fetch a specific order |
-| POST /api/<api-version>/orders | Place a new order. | 
-| PUT /api/<api-version>/orders/<orderId> | Update the status of an order. |
+| Endpoint | Functionality |Note|
+|----------|---------------|----|
+|POST api/v2/auth/signup|Register a user| |
+|POST api/v2/auth/login|Login a user| |
+|POST api/v2/users/orders|Place an order for food.| |
+|GET api/v2/users/orders|Get the order history for a logged in user.| |
+|GET api/v2/orders|Get all orders|Only Admin (caterer) should have access to this route| |
+|GET api/v2/orders/orderId|Fetch a specific order|orderId is an integer
+Only Admin (caterer) should have access to this route|
+|PUT api/v2/orders/orderId| |Only Admin (caterer) should have access to this route. The Status of an order could either be New, Processing, Cancelled or Complete. orderid is an integer|
+|GET /menu|Get available menu| |
+|POST /menu|Add a meal option to the menu.| Only Admin (caterer) should have access to this route|
 
 ## API Documentation
 Here is a link to my postman API documentation.
@@ -32,7 +38,8 @@ A live version of this API has been hosted on Heroku
 
 ## Acknowledgments
 
-* Hat tip to #team-titans 
-* Thank you Paul Rimiru (Learning Facilitator Assistant at Andela) for the guidance
+* Hat tip to #team-titans and #team-thanos  
+* Thank you Paul Rimiru (Week 1 Learning Facilitator Assistant at Andela) and Michael Mutoro for the continued feedback
+
 
 
