@@ -45,7 +45,18 @@ class Orders:
         self.message = "Successfully fetched the order."
         self.order_id = order_id
         self.db_error = None
-          
+    def update_specific_order(self,status,order_id):
+        """This function enables the admin to update a specific order. Input is order_id"""
+        self.query = "UPDATE orders SET order_status=%s WHERE order_id=%s"
+        self.input = (status,order_id)     #tuple to support indexing
+        self.query_1 = "SELECT order_id FROM orders ORDER BY order_id DESC LIMIT 1."
+        self.query_2 = "SELECT * FROM orders WHERE order_id=%s"
+        self.input_2 = (order_id,)     #tuple to support indexing
+        self.event = "admin_update_specific_order"
+        self.error = "Invalid order id"
+        self.message = "Successfully updated the order."
+        self.order_id = order_id
+        self.db_error = None     
     def connect_db(self):
         self.status = 0
         conn = None
@@ -91,7 +102,7 @@ class Orders:
                 self.ALL_ORDERS = []
                 for i in range(len(self.orders)):
                     self.ALL_ORDERS.append({'order_id':self.orders[i][0],
-                                'order_price':self.orders[i][1],
+                                'order_price':str(self.orders[i][1]),
                                 'order_delivery_address':self.orders[i][2],
                                 'order_quantity':self.orders[i][3],
                                 'order_contact':self.orders[i][4],
@@ -118,6 +129,37 @@ class Orders:
                                     'user_id' :specific_order[6],
                                     'meal_name' :specific_order[7],
                                     }
+                    
+                        
+                else: #Order_id does not exist
+                    self.status = 1
+                cur.close()
+                conn.close()
+            else:    #event is admin update specific order
+                #first get number of orders
+                print(self.input[0])
+                cur.execute(self.query_1)
+                number_of_orders = cur.fetchone()
+                if self.order_id in range(1,number_of_orders[0]+1):
+                    if self.input[0] in ["New","Processing", "Cancelled","Complete"]:
+                        cur.execute(self.query, self.input)
+                        # commit the changes
+                        conn.commit()
+                        cur.execute(self.query_2, self.input_2)
+                        specific_order = cur.fetchone()
+                        self.specific_order = {'order_id':specific_order[0],
+                                        'order_price':str(specific_order[1]),    #Decimal type not JSON seriailzable
+                                        'order_delivery_address':specific_order[2],
+                                        'order_quantity':specific_order[3],
+                                        'order_contact' :specific_order[4],
+                                        'order_status' :specific_order[5],
+                                        'user_id' :specific_order[6],
+                                        'meal_name' :specific_order[7],
+                                        }
+                    
+                    else: #invalid order_status
+                        self.status = 1
+                
                 else: #Order_id does not exist
                     self.status = 1
                 cur.close()

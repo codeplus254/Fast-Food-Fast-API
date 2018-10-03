@@ -118,19 +118,31 @@ def get_all_orders():
         if orders.db_error is not None:           #database error present
             return jsonify({"Database Error": orders.db_error })
         return jsonify({"Message": orders.error})
-@mod.route('/orders/<int:specific_order_id>', methods=['GET'])
+@mod.route('/orders/<int:specific_order_id>', methods=['GET','PUT'])
 @token_required
 @admin_true
-def get_specific_order(specific_order_id):
-    order = Orders(user_id)
-    order.get_specific_order(specific_order_id)
-    order.connect_db()
-    if order.status == 0:
-        return jsonify({"Message": order.message,"Order":order.specific_order})
-    else:
-        if order.db_error is not None:           #database error present
-            return jsonify({"Database Error": order.db_error })
-        return jsonify({"Message": order.error})  
+def specific_order(specific_order_id):
+    if request.method == 'GET':
+        order = Orders(user_id)
+        order.get_specific_order(specific_order_id)
+        order.connect_db()
+        if order.status == 0:
+            return jsonify({"Message": order.message,"Order":order.specific_order})
+        else:
+            if order.db_error is not None:           #database error present
+                return jsonify({"Database Error": order.db_error })
+            return jsonify({"Message": order.error})  
+    else: #PUT request
+        status = request.json.get('order_status')
+        order = Orders(user_id)
+        order.update_specific_order(status,specific_order_id)
+        order.connect_db()
+        if order.status == 0:
+            return jsonify({"Message": order.message,"Order":order.specific_order})
+        else:
+            if order.db_error is not None:           #database error present
+                return jsonify({"Database Error": order.db_error })
+            return jsonify({"Message": order.error})
 
 @mod.route('/auth/signup', methods=['POST'])
 def signup():

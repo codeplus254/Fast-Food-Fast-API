@@ -65,3 +65,15 @@ def test_get_specific_order():
     response = tester.get('/api/v2/orders/1')
     assert response.status_code == 200
     #assert "Successfully fetched the order." in json.loads(response.data)["Message"]
+
+def test_update_specific_order():
+    """Testing the .api/v2/orders/<orderId> GET request"""
+    response = tester.put('/api/v2/orders/1',
+                                    content_type="application/json", data=json.dumps(
+                                        {
+                                          "order_status":"Processing"
+
+                                        })
+                                    )
+    assert response.status_code == 200
+    #assert "Successfully updated the order." in json.loads(response.data)['Message']
