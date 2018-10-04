@@ -12,7 +12,7 @@ class Config(object):
     SALT='fast-food-fast'
     ADMIN_NAME='admin'
     ADMIN_PASSWORD='postgres'
-    os.environ['DATABASENAME']= 'fast_food_fast_db'
+    os.environ['DATABASENAME']= 'fast-food-fast-db'
 
 class ProductionConfig(Config):
     DEBUG = False
@@ -30,11 +30,11 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
-    print(os.getenv('DATABASENAME'))
-    os.environ.pop("DATABASENAME")
-    print(os.getenv('DATABASENAME'))
-    os.environ['DATABASENAME'] = 'test_fast_food_fast'
-    print(os.getenv('DATABASENAME'))
+    #print(os.getenv('DATABASENAME'))
+    #os.environ.pop("DATABASENAME")
+    #print(os.getenv('DATABASENAME'))
+    #os.environ['DATABASENAME'] = 'test_fast_food_fast'
+    #print(os.getenv('DATABASENAME'))
 app_config = {
     "development": DevelopmentConfig,
     "production": ProductionConfig,

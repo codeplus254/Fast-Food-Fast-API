@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0,'/home/andela/Fast-Food-Fast-API')
+#sys.path.insert(0,'/home/andela/Fast-Food-Fast-API')
 from api import create_app
 import os
 

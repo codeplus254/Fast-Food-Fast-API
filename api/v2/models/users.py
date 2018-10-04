@@ -15,7 +15,8 @@ user_token = None
 user_id = None
 
 class Users:
-    def __init__(self,name,password,admin):
+    def __init__(self,email,name,password,admin):
+        self.email = email
         self.name = name
         self.password = password
         passwd = self.password + salt
@@ -33,8 +34,8 @@ class Users:
     def signup(self):
         self.query_1 = """SELECT COUNT(*) FROM users WHERE user_name=%s;"""
         self.inputs_1 = (self.name,)
-        self.query_2 = "INSERT INTO public.users (user_id, user_name, user_password_hash,user_type,user_token) VALUES (%s,%s,%s,%s,%s)"
-        self.inputs_2 = (self.id.hexdigest(),self.name,self.passwd_hash.hexdigest(), 'admin',self.token)
+        self.query_2 = "INSERT INTO public.users (email,user_id, user_name, user_password_hash,user_type,user_token) VALUES (%s,%s,%s,%s,%s)"
+        self.inputs_2 = (self.email, self.id.hexdigest(),self.name,self.passwd_hash.hexdigest(), 'admin',self.token)
         self.message = "Sign Up successful"
         self.error = "Sign up failed. Please choose another user name."
         self.event = "Signup"      

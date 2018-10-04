@@ -1,17 +1,20 @@
 """THis python module conects to the database and creates the tables and sets an intial admin"""
 import sys
-sys.path.insert(0,'/home/andela/Fast-Food-Fast-API')
+sys.path.insert(0,r'C:\Users\Ronny\fast-food-fast')
 import psycopg2
 import os
-#from .users import Users
+from models.users import Users
 
+from flask import Flask,jsonify, Blueprint
+
+APP_INIT = Flask(__name__)
 hostname = os.getenv('HOSTNAME') 
 username = os.getenv('USERNAME')
 password = os.getenv('PASSWORD')
 database = os.getenv('DATABASENAME')
 admin_name = os.getenv('ADMIN_NAME')
 admin_password = os.getenv('ADMIN_PASSWORD')
-
+admin_email = os.getenv('ADMIN_EMAIL')
  
  
 def create_tables():
@@ -25,6 +28,7 @@ def create_tables():
         """CREATE SCHEMA public""",
         """
         CREATE TABLE users (
+            email VARCHAR(255) UNIQUE,
             user_id VARCHAR(255) UNIQUE,
             user_name VARCHAR(255) PRIMARY KEY ,
             user_password_hash VARCHAR(255) NOT NULL,
@@ -56,6 +60,7 @@ def create_tables():
     conn = None
     try:
         # connect to the PostgreSQL server
+        #print(database)
         conn = psycopg2.connect( host=hostname, user=username, password=password, dbname=database )
 
         cur = conn.cursor()
@@ -71,18 +76,21 @@ def create_tables():
     finally:
         if conn is not None:
             conn.close()
+
+@APP_INIT.route('/api/v2/admin', methods=['POST'])
 def create_admin():
     global user_token,user_id
-    user = Users(admin_name, admin_password, 1)
+    user = Users(admin_email,admin_name, admin_password, 1)
     user.hash()
     user.signup()
     user.connect_db()
     user_token = user.token
     user_id = user.id
     if user.status == 0:
-        return jsonify({"Message": user.message})
-    return jsonify({"Message": user.error})  
+        return jsonify({"Message": user.message,"token":user_token}),200
+    return jsonify({"Message": user.error}),403 
  
-
-create_tables()
-#create_admin()
+if __name__ == "__main__":
+    create_tables()
+    APP_INIT.run()
+    create_admin()
