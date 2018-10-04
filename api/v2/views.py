@@ -30,8 +30,8 @@ def token_required(f):
     def decorated(*args,**kwargs):
         #token = request.args.get('token')
         
-        if 'token' in request.headers:
-            token = request.headers['token']
+        if 'Token' in request.headers:
+            token = request.headers['Token']
             """Let's make sure the current user is using his/her token"""
             try:
                 # connect to the PostgreSQL server
@@ -56,8 +56,7 @@ def token_required(f):
                 conn.close()
             except (Exception, psycopg2.DatabaseError) as error:
             
-                db_error = "Database error: "+str(error)
-                return jsonify({db_error})
+                return jsonify({"Database error":str(error)})
             finally:
                 if conn is not None:
                     conn.close()
@@ -68,7 +67,7 @@ def admin_true(f):
     @wraps(f)
     def decorated(*args,**kwargs):
          #token = request.args.get('token')
-        if 'token' in request.headers:
+        if 'Token' in request.headers:
             token = request.headers['token']
             if not token:
                 return jsonify({'message': 'token is missing','token':token}),403
@@ -196,15 +195,22 @@ def specific_order(specific_order_id):
             if order.db_error is not None:           #database error present
                 return jsonify({"Database Error": order.db_error }),500
             return jsonify({"Message": order.error}),304
-
+@mod.route('/logout', methods=['GET'])
+@token_required
+def logout():
+    user = Users(email, user_name, user_password,0)
+    user.logout()
+    user.connect_db()
+    return jsonify({"Message":user.message})
 
 @mod.route('/auth/signup', methods=['POST'])
 def signup():
+    global user_id,email,user_name,user_password
     email = request.json.get('email')
     user_name = request.json.get('username')
     user_password = request.json.get('password')
     user_admin = 0
-    global user_id
+    
     user = Users(email, user_name, user_password,0)
     user.hash()
     user.signup()
@@ -216,13 +222,13 @@ def signup():
     return jsonify({"Message": user.error}),403    
 @mod.route('/auth/login', methods=['POST'])
 def login():
+    global user_id,email,user_name,user_password
     email = request.json.get('email')
     user_name = request.json.get('username')
     user_password = request.json.get('password')
     user_admin = 0
     #validate_password(user_password)
     #validate_email(email)
-    global user_id
     user = Users(email, user_name, user_password,0)
     user.login()
     
@@ -235,11 +241,11 @@ def login():
     
 @mod.route('/admin/login', methods=['POST'])
 def admin_login():
+    global user_id,email,user_name,user_password
     email = request.json.get('email')
     user_name = request.json.get('username')
     user_password = request.json.get('password')
     #user_admin = 1
-    global user_id
     user = Users(email, user_name, user_password,1)
     user.login()
     user.connect_db()
@@ -253,7 +259,7 @@ def admin_login():
 @token_required
 @admin_true
 def admin_signup_others():
-    global user_id
+    global user_id,email,user_name,user_password
     email = request.json.get('email')
     user_name = request.json.get('username')
     user_password = request.json.get('password')
@@ -262,17 +268,12 @@ def admin_signup_others():
     #validate_email(email)
     user = Users(email, user_name, user_password,user_admin)
     user.hash()
-    print("user hashed")
     #user.admin_token() #overrides the user token given above
     user.signup()
-    print("user signed up")
     user.connect_db()
-    print("connect db")
     if user.status == 0:
-        user_id = user.id[0]
-        print("Here's the id")
-        print(user.id)
-        return jsonify({"Message": user.message,"token":user_token.decode("utf-8")}),201
+        user_id2 = user.id.hexdigest()[0]
+        return jsonify({"Message": user.message}),201
     return jsonify({"Message": user.error}),403
         
 if __name__ == '__main__':

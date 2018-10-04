@@ -3,7 +3,7 @@ import sys
 sys.path.insert(0,r'C:\Users\Ronny\fast-food-fast')
 import psycopg2
 import os
-from models.users import Users
+from api.v2.models.users import Users
 
 #from flask import Flask,jsonify, Blueprint
 
@@ -24,26 +24,25 @@ def create_tables():
    
   
     commands = (
-        """drop schema public cascade""",
-        """CREATE SCHEMA public""",
+        """CREATE SCHEMA IF NOT EXISTS public""",
         """
-        CREATE TABLE users (
-            email VARCHAR(255) UNIQUE,
+        CREATE TABLE IF NOT EXISTS users (
+            email VARCHAR(255) PRIMARY KEY ,
             user_id VARCHAR(255) UNIQUE,
-            user_name VARCHAR(255) PRIMARY KEY ,
+            user_name VARCHAR(255) NOT NULL,
             user_password_hash VARCHAR(255) NOT NULL,
             user_type VARCHAR(15) NOT NULL,
             user_token VARCHAR(255)
         )
         """,
-        """ CREATE TABLE menu (
+        """ CREATE TABLE IF NOT EXISTS menu (
             
                 meal_id SERIAL UNIQUE ,
                 meal_name VARCHAR(50) PRIMARY KEY ,
                 meal_price DECIMAL(6,2) NOT NULL
                 )
         """,
-        """ CREATE TABLE orders (
+        """ CREATE TABLE IF NOT EXISTS orders (
             
                 order_id SERIAL PRIMARY KEY,
                 order_price DECIMAL(6,2) NOT NULL,
