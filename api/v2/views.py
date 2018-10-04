@@ -38,8 +38,15 @@ def token_required(f):
                 conn = psycopg2.connect( host=hostname, user=username, password=password, dbname=database )
             
                 cur = conn.cursor()
-                cur.execute("SELECT user_token FROM users WHERE user_id=%s",user_id)
-                db_token = cur.fetchone()
+                query = "SELECT user_token FROM users WHERE user_id=%s;"
+                inputs=(user_id,)
+                
+                cur.execute(query,inputs)
+                db_token = cur.fetchone()[0]
+                print("that's user TOKEN")
+                print(user_id)
+                print(db_token)
+                print("done")
                 if db_token == token:
                     try:
                         admin = jwt.decode(token, secret_key) 
@@ -48,7 +55,7 @@ def token_required(f):
                         return jsonify({'Message': 'token is invalid'}),403
                     return f(*args,**kwargs)
                 else:
-                    return jsonify({"Message":"Use your own token"})
+                    return jsonify({"Message":"Use your own token"}),403
                 cur.close()
                 conn.close()
             except (Exception, psycopg2.DatabaseError) as error:
@@ -118,7 +125,7 @@ def user_orders():
         order.place_order(meal_name,order_delivery_address,order_quantity,order_contact)
         order.connect_db()
         if order.status == 0:
-            return jsonify({"Message": order.message}),200
+            return jsonify({"Message": order.message}),201
         
         return jsonify({"Message": order.error,"Database Error": order.db_error }),403
     else:    #a user gets order history
@@ -127,7 +134,7 @@ def user_orders():
         order.connect_db()
         if order.status == 0:
             return jsonify({"Message": order.message,"Orders":order.history}),200
-        return jsonify({"Message": order.error,"Database Error": order.db_error }),403
+        return jsonify({"Message": order.error,"Database Error": order.db_error }),404
 @mod.route('/menu', methods=['GET'])
 @token_required
 def get_menu():
@@ -153,8 +160,8 @@ def update_menu():
         return jsonify({"Message": menu.message}),200
     else:
         if menu.db_error is not None:           #database error present
-            return jsonify({"Database Error": menu.db_error }),403
-        return jsonify({"Message": menu.error}),403
+            return jsonify({"Database Error": menu.db_error }),500
+        return jsonify({"Message": menu.error}),304
 @mod.route('/orders', methods=['GET'])
 @token_required
 @admin_true
@@ -166,7 +173,7 @@ def get_all_orders():
         return jsonify({"Message": orders.message,"Orders":orders.ALL_ORDERS}),200
     else:
         if orders.db_error is not None:           #database error present
-            return jsonify({"Database Error": orders.db_error }),403
+            return jsonify({"Database Error": orders.db_error }),500
         return jsonify({"Message": orders.error}),404
 @mod.route('/orders/<int:specific_order_id>', methods=['GET','PUT'])
 @token_required
@@ -180,8 +187,8 @@ def specific_order(specific_order_id):
             return jsonify({"Message": order.message,"Order":order.specific_order}),200
         else:
             if order.db_error is not None:           #database error present
-                return jsonify({"Database Error": order.db_error }),403
-            return jsonify({"Message": order.error}),403  
+                return jsonify({"Database Error": order.db_error }),500
+            return jsonify({"Message": order.error}),404  
     else: #PUT request
         status = request.json.get('order_status')
         order = Orders(user_id)
@@ -191,8 +198,8 @@ def specific_order(specific_order_id):
             return jsonify({"Message": order.message,"Order":order.specific_order}),200
         else:
             if order.db_error is not None:           #database error present
-                return jsonify({"Database Error": order.db_error }),403
-            return jsonify({"Message": order.error}),403
+                return jsonify({"Database Error": order.db_error }),500
+            return jsonify({"Message": order.error}),304
 
 
 @mod.route('/auth/signup', methods=['POST'])
@@ -207,27 +214,35 @@ def signup():
     user.signup()
     user.connect_db()
     user_token = user.token
-    user_id = user.id
     if user.status == 0:
-        return jsonify({"Message": user.message,"token":user_token}),200
+        user_id = user.id.hexdigest()
+        return jsonify({"Message": user.message,"token":user_token.decode("utf-8")}),201
     return jsonify({"Message": user.error}),403    
 @mod.route('/auth/login', methods=['POST'])
 def login():
+    print("login start")
     email = request.json.get('email')
     user_name = request.json.get('username')
     user_password = request.json.get('password')
     user_admin = 0
-    validate_password(user_password)
-    validate_email(email)
+    #validate_password(user_password)
+    #validate_email(email)
     global user_id
     user = Users(email, user_name, user_password,0)
+    print("initialised users class")
     user.login()
+    
     user.connect_db()
+    print("after user.connect_db()")
     user_token = user.token
-    user_id = user.id
+    print("before if statement")
     if user.status == 0:
-        return jsonify({"Message": user.message,"token":user_token}),200
+        user_id = user.id
+        print(user_id)
+        print("almost returning")
+        return jsonify({"Message": user.message,"token":user_token.decode("utf-8")}),201
     return jsonify({"Message": user.error}),403
+    
 @mod.route('/admin/login', methods=['POST'])
 def admin_login():
     email = request.json.get('email')
@@ -239,9 +254,10 @@ def admin_login():
     user.login()
     user.connect_db()
     user_token = user.token
-    user_id = user.id
+    
     if user.status == 0:
-        return jsonify({"Message": user.message,"token":user_token}),200
+        user_id = user.id
+        return jsonify({"Message": user.message,"token":user_token.decode("utf-8")}),201
     return jsonify({"Message": user.error}),403
 @mod.route('/admin/signup', methods=['POST'])
 @token_required
@@ -252,16 +268,16 @@ def admin_signup_others():
     user_name = request.json.get('username')
     user_password = request.json.get('password')
     user_admin = request.json.get('admin')
-    validate_password(user_password)
-    validate_email(email)
+    #validate_password(user_password)
+    #validate_email(email)
     user = Users(email, user_name, user_password,user_admin)
     user.hash()
     user.admin_token() #overrides the user token given above
     user.signup()
     user.connect_db()
-    user_id = user.id
     if user.status == 0:
-        return jsonify({"Message": user.message,"token":user_token}),200
+        user_id = user.id
+        return jsonify({"Message": user.message,"token":user_token.decode("utf-8")}),201
     return jsonify({"Message": user.error}),403
         
 if __name__ == '__main__':

@@ -12,7 +12,7 @@ class Config(object):
     SALT='fast-food-fast'
     ADMIN_NAME='admin'
     ADMIN_PASSWORD='postgres'
-    os.environ['DATABASENAME']= 'fast-food-fast-db'
+    os.environ['DATABASENAME']= 'fast_food_fast_db'
 
 class ProductionConfig(Config):
     DEBUG = False

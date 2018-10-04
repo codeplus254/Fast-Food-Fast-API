@@ -87,7 +87,7 @@ def create_admin():
     user_token = user.token
     user_id = user.id
     if user.status == 0:
-        return jsonify({"Message": user.message,"token":user_token}),200
+        return jsonify({"Message": user.message,"token":user_token.decode("utf-8")}),201
     return jsonify({"Message": user.error}),403 
  
 if __name__ == "__main__":

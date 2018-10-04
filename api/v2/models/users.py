@@ -32,20 +32,20 @@ class Users:
         
 
     def signup(self):
-        self.query_1 = """SELECT COUNT(*) FROM users WHERE user_name=%s;"""
+        self.query_1 = "SELECT COUNT(*) FROM users WHERE user_name=%s;"
         self.inputs_1 = (self.name,)
-        self.query_2 = "INSERT INTO public.users (email,user_id, user_name, user_password_hash,user_type,user_token) VALUES (%s,%s,%s,%s,%s)"
-        self.inputs_2 = (self.email, self.id.hexdigest(),self.name,self.passwd_hash.hexdigest(), 'admin',self.token)
+        self.query_2 = "INSERT INTO public.users (email,user_id, user_name, user_password_hash,user_type,user_token) VALUES (%s,%s,%s,%s,%s,%s)"
+        self.inputs_2 = (self.email, self.id.hexdigest(),self.name,self.passwd_hash.hexdigest(), 'admin',self.token.decode("utf-8"))
         self.message = "Sign Up successful"
         self.error = "Sign up failed. Please choose another user name."
         self.event = "Signup"      
     
     def login(self):
-        self.query = "SELECT user_id FROM users WHERE user_name=%s AND user_password_hash=%s"
+        self.query = "SELECT user_id FROM users WHERE user_name=%s AND user_password_hash=%s;"
         self.inputs = (self.name,self.passwd_hash.hexdigest())
         self.message = "Login successful"
         self.event = "Login" 
-        self.error = "Login error"   
+        self.error = "Login failed."   
     def connect_db(self):
     
         conn = None
@@ -57,23 +57,28 @@ class Users:
            
             cur = conn.cursor()
             if self.event == "Signup":
+                
                 cur.execute(self.query_1,self.inputs_1)
+                
                 rows = cur.fetchone()
                 #return jsonify({'user':rows[0]})
                 if rows[0] == 0: #user does not exist
+                    
                     cur.execute(self.query_2,self.inputs_2)
+                    
                     # close communication with the PostgreSQL database server
                     cur.close()
                     # commit the changes
                     conn.commit()
-                    print("User new")
+                    
                 else: #user already exists      
                     self.status = 1         #throw error since user exists
-                    print("User exists")
+                    
             else: #event is login
                        
                 cur.execute(self.query,self.inputs)
-                self.id = cur.fetchone()
+                self.id = cur.fetchone()[0]
+                print(self.id)
                 if self.id == None:     #user id does not exist
                     self.status=1
                     self.token = None
