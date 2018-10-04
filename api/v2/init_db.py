@@ -5,9 +5,9 @@ import psycopg2
 import os
 from models.users import Users
 
-from flask import Flask,jsonify, Blueprint
+#from flask import Flask,jsonify, Blueprint
 
-APP_INIT = Flask(__name__)
+#APP_INIT = Flask(__name__)
 hostname = os.getenv('HOSTNAME') 
 username = os.getenv('USERNAME')
 password = os.getenv('PASSWORD')
@@ -77,20 +77,20 @@ def create_tables():
         if conn is not None:
             conn.close()
 
-@APP_INIT.route('/api/v2/admin', methods=['POST'])
+#@APP_INIT.route('/api/v2/admin', methods=['POST'])
 def create_admin():
     global user_token,user_id
     user = Users(admin_email,admin_name, admin_password, 1)
     user.hash()
     user.signup()
     user.connect_db()
-    user_token = user.token
-    user_id = user.id
+    """user_token = user.token
+    #user_id = user.id
     if user.status == 0:
         return jsonify({"Message": user.message,"token":user_token.decode("utf-8")}),201
-    return jsonify({"Message": user.error}),403 
+    return jsonify({"Message": user.error}),403 """
  
 if __name__ == "__main__":
     create_tables()
-    APP_INIT.run()
+    #APP_INIT.run()
     create_admin()

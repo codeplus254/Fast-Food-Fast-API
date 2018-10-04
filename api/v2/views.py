@@ -43,10 +43,6 @@ def token_required(f):
                 
                 cur.execute(query,inputs)
                 db_token = cur.fetchone()[0]
-                print("that's user TOKEN")
-                print(user_id)
-                print(db_token)
-                print("done")
                 if db_token == token:
                     try:
                         admin = jwt.decode(token, secret_key) 
@@ -146,7 +142,7 @@ def get_menu():
     return jsonify({"Message": menu.error,"Database Error": menu.db_error }),404
    
 
-"""Test whether an admin can post a update menu """
+"""Test whether an admin can update menu """
 @mod.route('/menu', methods=['POST'])
 @token_required
 @admin_true
@@ -220,7 +216,6 @@ def signup():
     return jsonify({"Message": user.error}),403    
 @mod.route('/auth/login', methods=['POST'])
 def login():
-    print("login start")
     email = request.json.get('email')
     user_name = request.json.get('username')
     user_password = request.json.get('password')
@@ -229,17 +224,12 @@ def login():
     #validate_email(email)
     global user_id
     user = Users(email, user_name, user_password,0)
-    print("initialised users class")
     user.login()
     
     user.connect_db()
-    print("after user.connect_db()")
     user_token = user.token
-    print("before if statement")
     if user.status == 0:
         user_id = user.id
-        print(user_id)
-        print("almost returning")
         return jsonify({"Message": user.message,"token":user_token.decode("utf-8")}),201
     return jsonify({"Message": user.error}),403
     
@@ -272,11 +262,16 @@ def admin_signup_others():
     #validate_email(email)
     user = Users(email, user_name, user_password,user_admin)
     user.hash()
-    user.admin_token() #overrides the user token given above
+    print("user hashed")
+    #user.admin_token() #overrides the user token given above
     user.signup()
+    print("user signed up")
     user.connect_db()
+    print("connect db")
     if user.status == 0:
-        user_id = user.id
+        user_id = user.id[0]
+        print("Here's the id")
+        print(user.id)
         return jsonify({"Message": user.message,"token":user_token.decode("utf-8")}),201
     return jsonify({"Message": user.error}),403
         

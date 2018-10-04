@@ -9,5 +9,5 @@ APP = create_app(config_name)
 
 if __name__ == '__main__':
     
-    APP.run(debug=False)
+    APP.run(debug=True)
 

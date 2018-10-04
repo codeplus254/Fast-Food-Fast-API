@@ -41,8 +41,10 @@ class Users:
         self.event = "Signup"      
     
     def login(self):
-        self.query = "SELECT user_id FROM users WHERE user_name=%s AND user_password_hash=%s;"
-        self.inputs = (self.name,self.passwd_hash.hexdigest())
+        self.query_1 = "SELECT user_id FROM users WHERE user_name=%s AND user_password_hash=%s;"
+        self.inputs_1 = (self.name,self.passwd_hash.hexdigest())
+        self.query_2 = "UPDATE users SET user_token=%s WHERE user_name=%s AND email=%s"
+        self.inputs_2 = (self.token.decode("utf-8"),self.name,self.email)
         self.message = "Login successful"
         self.event = "Login" 
         self.error = "Login failed."   
@@ -76,8 +78,10 @@ class Users:
                     
             else: #event is login
                        
-                cur.execute(self.query,self.inputs)
-                self.id = cur.fetchone()[0]
+                cur.execute(self.query_1,self.inputs_1)
+                self.id = cur.fetchone()
+                cur.execute(self.query_2,self.inputs_2)
+                conn.commit()
                 print(self.id)
                 if self.id == None:     #user id does not exist
                     self.status=1
