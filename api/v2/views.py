@@ -274,7 +274,7 @@ def admin_signup_others():
     if user.status == 0:
         user_id2 = user.id.hexdigest()[0]
         return jsonify({"Message": user.message}),201
-    return jsonify({"Message": user.error}),403
+    return jsonify({"Message": user.error}),401
         
 if __name__ == '__main__':
     APP.run(debug=True)
