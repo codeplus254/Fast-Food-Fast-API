@@ -1,10 +1,12 @@
 """THis python module conects to the database and creates the tables and sets an intial admin"""
 import sys
-sys.path.insert(0,r'C:\Users\Ronny\fast-food-fast')
 import psycopg2
 import os
-from api.v2.models.users import Users
+dir_path = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0,dir_path)
 
+from models.users import Users
+print(dir_path)
 #from flask import Flask,jsonify, Blueprint
 
 #APP_INIT = Flask(__name__)
