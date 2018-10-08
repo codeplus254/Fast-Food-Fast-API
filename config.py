@@ -1,37 +1,43 @@
 import os
+from api.v2 import init_db
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config(object):
-    DEBUG = True
-    TESTING = False
-    CSRF_ENABLED = True
-    SECRET_KEY = 'andela'
-    HOSTNAME='localhost'
-    PASSWORD='Milionea1'
-    SALT='fast-food-fast'
-    ADMIN_NAME='admin'
-    ADMIN_PASSWORD='postgres'
-    os.environ['DATABASENAME']= 'fast_food_fast_db'
+    def __init__(self):
+        self.DEBUG = True
+        self.TESTING = False
+        self.CSRF_ENABLED = True
+    
 
 class ProductionConfig(Config):
-    DEBUG = False
+    def __init__(self):
+        self.DEBUG = False
 
 
 class StagingConfig(Config):
+    def __init__(self):
     DEVELOPMENT = True
     DEBUG = True
 
 
 class DevelopmentConfig(Config):
-    DEVELOPMENT = True
-    DEBUG = True
+    def __init__(self):
+        self.database = 'fast_food_fast_db'
+        self.DEVELOPMENT = True
+        self.DEBUG = True
+    
+    
 
 
 class TestingConfig(Config):
-    TESTING = True
-    os.environ.pop("DATABASENAME")
-    os.environ['DATABASENAME'] = 'test_fast_food_fast'
+    def __init__(self):
+        self.TESTING = True
+        self.database = 'test_fast_food_fast'
+    
+    
+
+
 app_config = {
     "development": DevelopmentConfig,
     "production": ProductionConfig,

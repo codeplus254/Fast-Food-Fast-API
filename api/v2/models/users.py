@@ -50,7 +50,7 @@ class Users:
         self.error = "Login failed. Check you credentials again!" 
     def logout(self):
         self.query_1 = "UPDATE users SET user_token=%s WHERE user_name=%s AND email=%s" 
-        self.inputs_1 = ("deleted",self.name,self.email)
+        self.inputs_1 = (None,self.name,self.email)
         self.message = "Logout successful"
         self.event = "Logout" 
         self.error = "Log out failed!"

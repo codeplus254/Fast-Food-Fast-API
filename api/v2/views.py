@@ -236,7 +236,7 @@ def login():
     user_token = user.token
     if user.status == 0:
         user_id = user.id
-        return jsonify({"Message": user.message,"token":user_token.decode("utf-8")}),201
+        return jsonify({"Message": user.message,"token":user_token.decode("utf-8")}),200
     return jsonify({"Message": user.error}),403
     
 @mod.route('/admin/login', methods=['POST'])
@@ -253,7 +253,7 @@ def admin_login():
     
     if user.status == 0:
         user_id = user.id
-        return jsonify({"Message": user.message,"token":user_token.decode("utf-8")}),201
+        return jsonify({"Message": user.message,"token":user_token.decode("utf-8")}),200
     return jsonify({"Message": user.error}),403
 @mod.route('/admin/signup', methods=['POST'])
 @token_required

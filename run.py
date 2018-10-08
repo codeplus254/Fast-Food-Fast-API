@@ -6,14 +6,13 @@ from os.path import join, dirname
 from dotenv import load_dotenv
 
 # Create .env file path.
-dotenv_path = join(dirname(__file__), '.env')
- 
+#dotenv_path = join(dirname(__file__), '.env')
+dotenv_path = join(os.path.dirname(os.path.realpath(__file__)),'.env')
+
 # Load file from the path.
-load_dotenv('.env')
-#print(dotenv_path)
-#print(os.getenv("SECRET_KEY"))
+
+#load_dotenv(dotenv_path=dotenv_path)
 config_name = os.getenv("APP_SETTINGS")
-#print(configuration_key)
 APP = create_app(config_name)
 
 if __name__ == '__main__':
