@@ -1,9 +1,10 @@
 
 CREATE USER tester WITH PASSWORD 'travis-test';
-GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP ON *.* TO tester;
+
 
 CREATE DATABASE IF NOT EXISTS test_fast_food_fast;
 USE test_fast-food_fast;
+GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP ON DATABASE test_fast_food_fast TO tester;
 CREATE SCHEMA IF NOT EXISTS public;
         
 CREATE TABLE IF NOT EXISTS users (
