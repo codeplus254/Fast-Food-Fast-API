@@ -5,7 +5,6 @@ CREATE USER tester WITH PASSWORD 'travis-test';
 CREATE DATABASE test_fast_food_fast;
 \c test_fast_food_fast
 GRANT ALL PRIVILEGES ON DATABASE test_fast_food_fast TO tester;
-CREATE SCHEMA IF NOT EXISTS public;
         
 CREATE TABLE users (
     email VARCHAR(255) PRIMARY KEY ,
@@ -14,13 +13,13 @@ CREATE TABLE users (
     user_password_hash VARCHAR(255) NOT NULL,
     user_type VARCHAR(15) NOT NULL,
     user_token VARCHAR(255)
-)
- CREATE TABLE menu (
+);
+CREATE TABLE menu (
             
                 meal_id SERIAL UNIQUE ,
                 meal_name VARCHAR(50) PRIMARY KEY ,
                 meal_price DECIMAL(6,2) NOT NULL
-                )
+                );
 CREATE TABLE orders (
             
                 order_id SERIAL PRIMARY KEY,
@@ -33,6 +32,6 @@ CREATE TABLE orders (
                 meal_name VARCHAR(50) NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES users(user_id),
                 FOREIGN KEY (meal_name) REFERENCES menu(meal_name)
-                )
+                );
 
 
