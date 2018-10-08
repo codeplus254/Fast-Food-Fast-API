@@ -1,10 +1,10 @@
 
-CREATE USER 'dev'@'localhost' IDENTIFIED BY 'dev';
-GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP ON *.* TO 'dev'@'localhost';
+CREATE USER tester WITH PASSWORD 'travis-test';
+GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP ON *.* TO tester;
 
-CREATE DATABASE IF NOT EXISTS `test_fast_food_fast` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `test_fast-food_fast`;
-CREATE SCHEMA IF NOT EXISTS public,
+CREATE DATABASE IF NOT EXISTS test_fast_food_fast;
+USE test_fast-food_fast;
+CREATE SCHEMA IF NOT EXISTS public;
         
 CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) PRIMARY KEY ,
