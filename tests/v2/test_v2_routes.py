@@ -20,6 +20,7 @@ tester = APP.test_client()
 
 def test_clear_db():
     try:
+        
         # connect to the PostgreSQL server
         conn = psycopg2.connect( host=hostname, user=username, password=password, dbname=database )
         cur = conn.cursor()
@@ -39,11 +40,12 @@ def test_clear_db():
 """sign up user"""
 """testing the /api/v2/auth/signup POST request"""       
 def test_signup():
+    print(database)
     response = tester.post('/api/v2/auth/signup',
                                     content_type="application/json", data=json.dumps(
                                         {
-                                            "email":"rony@andela.com",
-                                            "username": "rony",
+                                            "email":"ronny@andela.com",
+                                            "username": "ronny",
                                             "password":"password"
                                         })
                                         )
@@ -65,7 +67,7 @@ def test_login():
                                         })
                                         )
     assert "Login successful" in json.loads(response.data)["Message"]
-    assert response.status_code == 201  
+    assert response.status_code == 200  
     global user_token
     text = response.get_data(as_text=True)
     user_token = ast.literal_eval(text.replace(" ", ""))['token'] 
