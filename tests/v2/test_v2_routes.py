@@ -13,9 +13,9 @@ hostname = os.getenv('HOSTNAME')
 username = os.getenv('USERNAME')
 password = os.getenv('PASSWORD')
 database = os.getenv('DATABASENAME')
+configuration = osgetenv('APP_SETTINGS')
 
-
-APP = create_app('testing')
+APP = create_app(configuration)
 tester = APP.test_client()
 
 def test_clear_db():
