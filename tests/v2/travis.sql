@@ -4,7 +4,7 @@ CREATE USER tester WITH PASSWORD 'travis-test';
 
 CREATE DATABASE test_fast_food_fast OWNER tester;
 \c test_fast_food_fast
-GRANT ALL PRIVILEGES ALL TABLES IN SCHEMA test_fast_food_fast.public TO tester;
+GRANT ALL ON ALL TABLES IN SCHEMA test_fast_food_fast.public TO tester;
         
 CREATE TABLE users (
     email VARCHAR(255) PRIMARY KEY ,
