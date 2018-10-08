@@ -4,7 +4,6 @@ CREATE USER tester WITH PASSWORD 'travis-test';
 
 CREATE DATABASE test_fast_food_fast OWNER tester;
 \c test_fast_food_fast
-GRANT ALL PRIVILEGES ON DATABASE test_fast_food_fast TO tester;
         
 CREATE TABLE users (
     email VARCHAR(255) PRIMARY KEY ,
@@ -34,4 +33,4 @@ CREATE TABLE orders (
                 FOREIGN KEY (meal_name) REFERENCES menu(meal_name)
                 );
 
-
+\dt
