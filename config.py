@@ -17,8 +17,8 @@ class ProductionConfig(Config):
 
 class StagingConfig(Config):
     def __init__(self):
-    DEVELOPMENT = True
-    DEBUG = True
+        DEVELOPMENT = True
+        DEBUG = True
 
 
 class DevelopmentConfig(Config):
