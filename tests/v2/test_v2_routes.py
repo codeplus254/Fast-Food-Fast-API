@@ -13,7 +13,7 @@ hostname = os.getenv('HOSTNAME')
 username = os.getenv('USERNAME')
 password = os.getenv('PASSWORD')
 database = os.getenv('DATABASENAME')
-configuration = osgetenv('APP_SETTINGS')
+configuration = os.getenv('APP_SETTINGS')
 
 APP = create_app(configuration)
 tester = APP.test_client()
