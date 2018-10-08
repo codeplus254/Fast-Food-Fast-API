@@ -2,7 +2,7 @@
 CREATE USER tester WITH PASSWORD 'travis-test';
 
 
-CREATE DATABASE IF NOT EXISTS test_fast_food_fast;
+CREATE DATABASE test_fast_food_fast;
 \c test_fast-food_fast
 GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP ON DATABASE test_fast_food_fast TO tester;
 CREATE SCHEMA IF NOT EXISTS public;
