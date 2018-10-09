@@ -27,14 +27,12 @@ class DevelopmentConfig(Config):
         self.DEVELOPMENT = True
         self.DEBUG = True
     
-    
 
 
 class TestingConfig(Config):
     def __init__(self):
         self.TESTING = True
-        self.database = 'test_fast_food_fast'
-    
+        self.database = 'postgres'
     
 
 

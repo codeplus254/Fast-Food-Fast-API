@@ -18,8 +18,6 @@ def create_app(config_name):
     configuration = app_config[config_name]()
     APP.config.from_object(configuration)
     os.environ['DATABASENAME'] = configuration.database
-    print(configuration.database)
-    print("from env:",os.getenv("DATABASENAME"))
     create_tables()
     create_admin()
     APP.register_blueprint(v1.views.mod, url_prefix = '/api/v1')

@@ -152,7 +152,7 @@ def update_menu():
     menu.update_menu(request.json.get('meal_name'), request.json.get('meal_price'))
     menu.connect_db()
     if menu.status == 0:
-        return jsonify({"Message": menu.message}),200
+        return jsonify({"Message": menu.message}),201
     else:
         if menu.db_error is not None:           #database error present
             return jsonify({"Database Error": menu.db_error }),500

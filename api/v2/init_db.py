@@ -6,7 +6,6 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0,dir_path)
 
 from models.users import Users
-print(dir_path)
 #from flask import Flask,jsonify, Blueprint
 
 #APP_INIT = Flask(__name__)
