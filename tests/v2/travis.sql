@@ -2,7 +2,7 @@
 CREATE USER tester WITH PASSWORD 'travis-test';
 
 
-CREATE DATABASE postgres OWNER tester;
+CREATE DATABASE IF NOT EXISTS postgres OWNER tester;
 \c postgres
 
         
