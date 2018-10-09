@@ -15,8 +15,8 @@ CREATE TABLE users (
 );
 CREATE TABLE menu (
             
-                meal_id SERIAL UNIQUE ,
-                meal_name VARCHAR(50) PRIMARY KEY ,
+                meal_id SERIAL UNIQUE,
+                meal_name VARCHAR(50) PRIMARY KEY,
                 meal_price DECIMAL(6,2) NOT NULL
                 );
 CREATE TABLE orders (
