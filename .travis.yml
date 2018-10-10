@@ -9,7 +9,7 @@ before_script:
   - psql -U postgres < tests/v2/travis.sql
 script:
     - pytest tests 
-    - psql -c '\dt'
+    - psql -c '\l'
 services:
   - postgresql
 after_success:

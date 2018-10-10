@@ -38,6 +38,7 @@ class Menu:
                 #return jsonify({'user':rows[0]})
                 if rows[0] == 0: #meal name does not exist in  menu
                     cur.execute(self.query_2,self.input_2)
+                    print("updated menu")
                     # close communication with the PostgreSQL database server
                     cur.close()
                     # commit the changes
