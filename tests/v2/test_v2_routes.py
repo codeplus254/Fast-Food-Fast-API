@@ -26,7 +26,7 @@ def test_signup():
                                         {
                                             "email":"ronny@andela.com",
                                             "username": "ronny",
-                                            "password":"password"
+                                            "password":"Password01"
                                         })
                                         )
     assert "Sign Up successful" in json.loads(response.data)["Message"]
@@ -43,7 +43,7 @@ def test_login():
                                         {
                                             "email":"ronny@andela.com",
                                             "username": "ronny",
-                                            "password":"password"
+                                            "password":"Password01"
                                         })
                                         )
     assert "Login successful" in json.loads(response.data)["Message"]

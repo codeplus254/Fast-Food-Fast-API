@@ -67,10 +67,8 @@ class Users:
                     cur.close()
                     # commit the changes
                     conn.commit()
-                    print("User new")
                 else: #user already exists      
                     self.status = 1         #throw error since user exists
-                    print("User exists")
             else: #event is login
                        
                 cur.execute(self.query,self.inputs)

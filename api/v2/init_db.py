@@ -80,7 +80,6 @@ def create_tables():
 #@APP_INIT.route('/api/v2/admin', methods=['POST'])
 def create_admin():
     global user_token,user_id
-    print(database)
     user = Users(admin_email,admin_name, admin_password, 1)
     user.hash()
     user.signup()
@@ -93,5 +92,4 @@ def create_admin():
  
 if __name__ == "__main__":
     create_tables()
-    #APP_INIT.run()
     create_admin()

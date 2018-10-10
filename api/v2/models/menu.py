@@ -31,22 +31,16 @@ class Menu:
             cur = conn.cursor()
             #first check if the meal name exists
             if self.event == "update":
-                print("firing up update")
                 cur.execute(self.query_1,self.input_1)
                 rows = cur.fetchone()
-                print("first fetch done")
-                print('user: '+str(rows[0]))
                 if rows[0] == 0: #meal name does not exist in  menu
-                    print('in if statement')
                     cur.execute(self.query_2,self.input_2)
-                    print("updated menu")
                     # close communication with the PostgreSQL database server
                     cur.close()
                     # commit the changes
                     conn.commit()
                 else: #meal name already exists      
-                    self.status = 1         #throw error since user exists
-                print("finally updated menu")    
+                    self.status = 1         #throw error since user exists   
             else: #user fetches menu
                 cur.execute(self.query)
                 self.meals = cur.fetchall()
@@ -65,7 +59,6 @@ class Menu:
         except (Exception, psycopg2.DatabaseError) as error:
             self.status = 1
             self.db_error = "Database error: "+str(error)
-            print(self.db_error)
         finally:
             if conn is not None:
                 conn.close()

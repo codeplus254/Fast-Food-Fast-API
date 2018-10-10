@@ -51,7 +51,7 @@ def token_required(f):
                         return jsonify({'Message': 'token is invalid'}),403
                     return f(*args,**kwargs)
                 else:
-                    return jsonify({"Message":"Use your own token"}),403
+                    return jsonify({"Message":"Invalid token"}),403
                 cur.close()
                 conn.close()
             except (Exception, psycopg2.DatabaseError) as error:
@@ -84,30 +84,37 @@ def admin_true(f):
 
 def validate_password(passwd):
     valid = True
-    while valid:  
-        if (len(passwd)<8 or len(passwd)>20):
-            break
-        elif not re.search("[a-z]",passwd):
-            break
-        elif not re.search("[0-9]",passwd):
-            break
-        elif not re.search("[A-Z]",passwd):
-            break
-        elif re.search("\s",passwd): #ensure no spaces,tabs or blanks
-            break
-        else:
-            valid=False
-            break
-
-    if valid==False:
-        return jsonify({'Message': 'Password should contain at least one uppercase letter,lowercase letter,one number and no spaces.'}), 403
+      
+    if (len(passwd))<7:
+        valid=False
+    elif re.search("[a-z]",passwd) is None:
+        valid=False
+    elif re.search("[0-9]",passwd) is None:
+        valid=False
+    elif re.search("[A-Z]",passwd) is None:
+        valid=False
+    elif re.search("\s",passwd): #ensure no spaces,tabs or blanks
+        valid=False
+        
+    
+    return valid
 def validate_email(email):
+    print("validating email")
+    valid=True
     EMAIL_REGEX = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
-
+    print("before if in email regex")
     if not EMAIL_REGEX.match(email):
-        return jsonify({'Message': 'Please enter a proper email address.'}), 403
-
-
+        valid = False
+    print("email is:" + str(valid))
+    return valid
+def validate_username(name):
+    valid = True
+      
+    if (len(name))<4:
+        valid=False
+    elif re.search("\s",name): #ensure no spaces,tabs or blanks
+        valid=False
+    return valid
 @mod.route('/users/orders', methods=['POST','GET'])
 @token_required
 def user_orders():
@@ -210,16 +217,24 @@ def signup():
     user_name = request.json.get('username')
     user_password = request.json.get('password')
     user_admin = 0
-    
-    user = Users(email, user_name, user_password,0)
-    user.hash()
-    user.signup()
-    user.connect_db()
-    user_token = user.token
-    if user.status == 0:
-        user_id = user.id.hexdigest()
-        return jsonify({"Message": user.message,"token":user_token.decode("utf-8")}),201
-    return jsonify({"Message": user.error}),403    
+    valid_password = validate_password(user_password)
+    valid_email = validate_email(email)
+    valid_name = validate_username(user_name)
+    if valid_password==True and valid_email==True and valid_name==True:
+        user = Users(email, user_name, user_password,0)
+        user.hash()
+        user.signup()
+        user.connect_db()
+        user_token = user.token
+        if user.status == 0:
+            user_id = user.id.hexdigest()
+            return jsonify({"Message": user.message,"token":user_token.decode("utf-8")}),201
+        return jsonify({"Message": user.error}),403
+    elif valid_password==False:
+        return jsonify({'Error': 'Password should be at least 7 characters long and should contain at least one uppercase letter,lowercase letter,one number and no spaces.'}), 403
+    elif valid_email==False:
+        return jsonify({'Error': 'Please enter a proper email address.'}), 403
+    return jsonify({'Error': 'Username should be at least 4 characters long and should contain no spaces'}), 403  
 @mod.route('/auth/login', methods=['POST'])
 def login():
     global user_id,email,user_name,user_password
@@ -227,8 +242,6 @@ def login():
     user_name = request.json.get('username')
     user_password = request.json.get('password')
     user_admin = 0
-    #validate_password(user_password)
-    #validate_email(email)
     user = Users(email, user_name, user_password,0)
     user.login()
     
@@ -264,18 +277,24 @@ def admin_signup_others():
     user_name = request.json.get('username')
     user_password = request.json.get('password')
     user_admin = request.json.get('admin')
-    #validate_password(user_password)
-    #validate_email(email)
-    user = Users(email, user_name, user_password,user_admin)
-    user.hash()
-    #user.admin_token() #overrides the user token given above
-    user.signup()
-    user.connect_db()
-    if user.status == 0:
-        user_id2 = user.id.hexdigest()[0]
-        return jsonify({"Message": user.message}),201
-    return jsonify({"Message": user.error}),401
-        
+    valid_password = validate_password(user_password)
+    valid_email = validate_email(email)
+    valid_name = validate_username(user_name)
+    if valid_password==True and valid_email==True and valid_name==True:
+        user = Users(email, user_name, user_password,user_admin)
+        user.hash()
+        #user.admin_token() #overrides the user token given above
+        user.signup()
+        user.connect_db()
+        if user.status == 0:
+            user_id2 = user.id.hexdigest()[0]
+            return jsonify({"Message": user.message}),201
+        return jsonify({"Message": user.error}),401
+    elif valid_password==False:
+        return jsonify({'Error': 'Password should be at least 7 characters long and should contain at least one uppercase letter,lowercase letter,one number and no spaces.'}), 403
+    elif valid_email==False:
+        return jsonify({'Error': 'Please enter a proper email address.'}), 403
+    return jsonify({'Error': 'Username should be at least 4 characters long and should contain no spaces'}), 403   
 if __name__ == '__main__':
     APP.run(debug=True)
 

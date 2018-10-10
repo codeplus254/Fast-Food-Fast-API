@@ -84,7 +84,6 @@ class Users:
                 self.id = cur.fetchone()
                 cur.execute(self.query_2,self.inputs_2)
                 conn.commit()
-                print(self.id)
                 if self.id == None:     #user id does not exist
                     self.status=1
                     self.token = None
