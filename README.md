@@ -12,8 +12,7 @@ This API has nine end-points
 |POST api/v2/users/orders|Place an order for food.| |
 |GET api/v2/users/orders|Get the order history for a logged in user.| |
 |GET api/v2/orders|Get all orders|Only Admin (caterer) should have access to this route| |
-|GET api/v2/orders/orderId|Fetch a specific order|orderId is an integer
-Only Admin (caterer) should have access to this route|
+|GET api/v2/orders/orderId|Fetch a specific order|orderId is an integer. Only Admin (caterer) should have access to this route|
 |PUT api/v2/orders/orderId| Only Admin (caterer) should have access to this route.The status of an order could either be New, Processing, Cancelled or Complete.| orderid is an integer|                         |
 |GET /menu|Get available menu| |
 |POST /menu|Add a meal option to the menu.| Only Admin (caterer) should have access to this route|
