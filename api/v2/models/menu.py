@@ -18,7 +18,7 @@ class Menu:
         self.error = "Menu update not successful. The meal name already exists!"
         self.query_1 = "SELECT COUNT(*) FROM menu WHERE meal_name=%s;"
         self.input_1 = (self.name,)
-        self.query_2 = "INSERT INTO public.menu (meal_name, meal_price) VALUES (%s,%s)"
+        self.query_2 = "INSERT INTO menu (meal_name, meal_price) VALUES (%s,%s)"
         self.input_2 = (self.name,self.price)
 
     def connect_db(self):
