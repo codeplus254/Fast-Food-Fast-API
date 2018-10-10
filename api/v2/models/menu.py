@@ -65,6 +65,7 @@ class Menu:
         except (Exception, psycopg2.DatabaseError) as error:
             self.status = 1
             self.db_error = "Database error: "+str(error)
+            print(self.db_error)
         finally:
             if conn is not None:
                 conn.close()
