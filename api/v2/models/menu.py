@@ -35,8 +35,9 @@ class Menu:
                 cur.execute(self.query_1,self.input_1)
                 rows = cur.fetchone()
                 print("first fetch done")
-                print('user'+str(rows[0]))
+                print('user: '+str(rows[0]))
                 if rows[0] == 0: #meal name does not exist in  menu
+                    print('in if statement')
                     cur.execute(self.query_2,self.input_2)
                     print("updated menu")
                     # close communication with the PostgreSQL database server
