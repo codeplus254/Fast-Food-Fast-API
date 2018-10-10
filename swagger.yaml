@@ -1,0 +1,466 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: FAST_FOOD_FAST_VERSION_2
+  description: This is the fast food fast (food delivery service app) API.
+  contact: {}
+host: 127.0.0.1:5000
+basePath: /api/v2
+schemes:
+- http
+consumes:
+- application/json
+produces:
+- application/json
+paths:
+  /admin/login:
+    post:
+      description: An admin can be able to login after providing correct credentials.
+      summary: Admin sudo login
+      operationId: AdminLoginPost
+      produces:
+      - application/json
+      parameters:
+      - name: Body
+        in: body
+        required: true
+        description: ''
+        schema:
+          $ref: '#/definitions/AdminSudoLoginrequest'
+      - name: Content-Type
+        in: header
+        required: true
+        type: string
+        description: ''
+      responses:
+        200:
+          description: ''
+  /admin/signup:
+    post:
+      description: An admin can be able to sign up other admins or users.
+      summary: Admin add other admins
+      operationId: AdminSignupPost
+      produces:
+      - application/json
+      parameters:
+      - name: Body
+        in: body
+        required: true
+        description: ''
+        schema:
+          $ref: '#/definitions/AdminAddOtherAdminsrequest'
+      - name: Content-Type
+        in: header
+        required: true
+        type: string
+        description: ''
+      - name: Token
+        in: header
+        required: true
+        type: string
+        description: ''
+      responses:
+        200:
+          description: ''
+  /menu:
+    get:
+      description: A user is able to view all meals available in the menu.
+      summary: Get menu
+      operationId: MenuGet
+      produces:
+      - application/json
+      parameters:
+      - name: token
+        in: header
+        required: true
+        type: string
+        description: ''
+      responses:
+        200:
+          description: ''
+        403:
+          description: FORBIDDEN
+          schema:
+            $ref: '#/definitions/GetMenuerrorresponse'
+          examples:
+            application/json:
+              Message: token is invalid
+    post:
+      summary: Admin add new meal in the menu
+      operationId: MenuPost
+      produces:
+      - application/json
+      parameters:
+      - name: token
+        in: query
+        required: true
+        type: string
+        description: ''
+      - name: token
+        in: header
+        required: true
+        type: string
+        description: ''
+      - name: Body
+        in: body
+        required: true
+        description: ''
+        schema:
+          $ref: '#/definitions/AdminAddNewMealInTheMenurequest'
+      - name: Content-Type
+        in: header
+        required: true
+        type: string
+        description: ''
+      responses:
+        200:
+          description: ''
+  /auth/signup:
+    post:
+      description: A user can sign up. Email has to be unique and not used before.
+      summary: User signup
+      operationId: AuthSignupPost
+      produces:
+      - application/json
+      parameters:
+      - name: Body
+        in: body
+        required: true
+        description: ''
+        schema:
+          $ref: '#/definitions/UserSignuprequest'
+      - name: Content-Type
+        in: header
+        required: true
+        type: string
+        description: ''
+      responses:
+        200:
+          description: ''
+  /auth/login:
+    post:
+      description: A user is able to login once they've inputted correctly, their credentials.
+      summary: User login
+      operationId: AuthLoginPost
+      produces:
+      - application/json
+      parameters:
+      - name: Body
+        in: body
+        required: true
+        description: ''
+        schema:
+          $ref: '#/definitions/UserLoginrequest'
+      - name: Content-Type
+        in: header
+        required: true
+        type: string
+        description: ''
+      responses:
+        200:
+          description: ''
+  /users/orders:
+    get:
+      summary: User fetch order history
+      operationId: UsersOrdersGet
+      produces:
+      - application/json
+      parameters:
+      - name: Token
+        in: query
+        required: true
+        type: string
+        description: ''
+      - name: token
+        in: header
+        required: true
+        type: string
+        description: ''
+      responses:
+        200:
+          description: ''
+    post:
+      description: 'A user can be able to place an order. The meal name has to be in the menu. '
+      summary: Place an order
+      operationId: UsersOrdersPost
+      produces:
+      - application/json
+      parameters:
+      - name: Body
+        in: body
+        required: true
+        description: ''
+        schema:
+          $ref: '#/definitions/PlaceAnOrderrequest'
+      - name: Content-Type
+        in: header
+        required: true
+        type: string
+        description: ''
+      - name: token
+        in: header
+        required: true
+        type: string
+        description: ''
+      responses:
+        200:
+          description: ''
+  /orders:
+    get:
+      description: An admin can fetch all the orders laced by customers.
+      summary: Admin fetch all orders
+      operationId: OrdersGet
+      produces:
+      - application/json
+      parameters:
+      - name: token
+        in: header
+        required: true
+        type: string
+        description: ''
+      responses:
+        200:
+          description: ''
+  /orders/1:
+    get:
+      description: Given the order id, the admin can be able to view the order associated with that id
+      summary: Admin fetch a specific order
+      operationId: Orders1Get
+      produces:
+      - application/json
+      parameters:
+      - name: Token
+        in: query
+        required: true
+        type: string
+        description: ''
+      - name: Token
+        in: header
+        required: true
+        type: string
+        description: ''
+      responses:
+        200:
+          description: ''
+    put:
+      description: Given the order id, the admin can be able to update the status of an order from New to Processing, Cancelled or Complete
+      summary: Admin update status of an order
+      operationId: Orders1Put
+      produces:
+      - application/json
+      parameters:
+      - name: Body
+        in: body
+        required: true
+        description: ''
+        schema:
+          $ref: '#/definitions/AdminUpdateStatusOfAnOrderrequest'
+      - name: Content-Type
+        in: header
+        required: true
+        type: string
+        description: ''
+      - name: Token
+        in: header
+        required: true
+        type: string
+        description: ''
+      responses:
+        200:
+          description: ''
+  /logout:
+    get:
+      description: A user should be able to log out.
+      summary: User log out
+      operationId: LogoutGet
+      produces:
+      - application/json
+      parameters:
+      - name: Token
+        in: header
+        required: true
+        type: string
+        description: ''
+      responses:
+        200:
+          description: ''
+definitions:
+  AdminSudoLoginrequest:
+    title: Admin sudo loginRequest
+    example:
+      email: admin@ansela.com
+      username: admin
+      password: sudo
+    type: object
+    properties:
+      email:
+        description: ''
+        example: admin@ansela.com
+        type: string
+      username:
+        description: ''
+        example: admin
+        type: string
+      password:
+        description: ''
+        example: sudo
+        type: string
+    required:
+    - email
+    - username
+    - password
+  AdminAddOtherAdminsrequest:
+    title: Admin add other adminsRequest
+    example:
+      email: admin@andela.com
+      username: real_admin
+      password: root
+      admin: 1
+    type: object
+    properties:
+      email:
+        description: ''
+        example: admin@andela.com
+        type: string
+      username:
+        description: ''
+        example: real_admin
+        type: string
+      password:
+        description: ''
+        example: root
+        type: string
+      admin:
+        description: ''
+        example: 1
+        type: integer
+        format: int32
+    required:
+    - email
+    - username
+    - password
+    - admin
+  AdminAddNewMealInTheMenurequest:
+    title: Admin add new meal in the menuRequest
+    example:
+      meal_name: pizza
+      meal_price: 700
+    type: object
+    properties:
+      meal_name:
+        description: ''
+        example: pizza
+        type: string
+      meal_price:
+        description: ''
+        example: 700
+        type: number
+        format: double
+    required:
+    - meal_name
+    - meal_price
+  UserSignuprequest:
+    title: User signupRequest
+    example:
+      email: ron3@gma.com
+      username: nin3
+      password: password
+    type: object
+    properties:
+      email:
+        description: ''
+        example: ron3@gma.com
+        type: string
+      username:
+        description: ''
+        example: nin3
+        type: string
+      password:
+        description: ''
+        example: password
+        type: string
+    required:
+    - email
+    - username
+    - password
+  UserLoginrequest:
+    title: User loginRequest
+    example:
+      email: ron@gma.com
+      username: nin
+      password: password
+    type: object
+    properties:
+      email:
+        description: ''
+        example: ron@gma.com
+        type: string
+      username:
+        description: ''
+        example: nin
+        type: string
+      password:
+        description: ''
+        example: password
+        type: string
+    required:
+    - email
+    - username
+    - password
+  GetMenuerrorresponse:
+    title: Get menuErrorResponse
+    example:
+      Message: token is invalid
+    type: object
+    properties:
+      Message:
+        description: ''
+        example: token is invalid
+        type: string
+    required:
+    - Message
+  PlaceAnOrderrequest:
+    title: Place an orderRequest
+    example:
+      meal_name: pizza
+      order_address: Westlands
+      order_quantity: 2
+      order_contact: 720682290
+    type: object
+    properties:
+      meal_name:
+        description: ''
+        example: pizza
+        type: string
+      order_address:
+        description: ''
+        example: Westlands
+        type: string
+      order_quantity:
+        description: ''
+        example: 2
+        type: integer
+        format: int32
+      order_contact:
+        description: ''
+        example: 720682290
+        type: integer
+        format: int32
+    required:
+    - meal_name
+    - order_address
+    - order_quantity
+    - order_contact
+  AdminUpdateStatusOfAnOrderrequest:
+    title: Admin update status of an orderRequest
+    example:
+      order_status: Processing
+    type: object
+    properties:
+      order_status:
+        description: ''
+        example: Processing
+        type: string
+    required:
+    - order_status
+tags: []

@@ -18,7 +18,7 @@ class Menu:
         self.error = "Menu update not successful. The meal name already exists!"
         self.query_1 = "SELECT COUNT(*) FROM menu WHERE meal_name=%s;"
         self.input_1 = (self.name,)
-        self.query_2 = "INSERT INTO public.menu (meal_name, meal_price) VALUES (%s,%s)"
+        self.query_2 = "INSERT INTO menu (meal_name, meal_price) VALUES (%s,%s)"
         self.input_2 = (self.name,self.price)
 
     def connect_db(self):
@@ -31,11 +31,8 @@ class Menu:
             cur = conn.cursor()
             #first check if the meal name exists
             if self.event == "update":
-                print("firing up update")
                 cur.execute(self.query_1,self.input_1)
                 rows = cur.fetchone()
-                print("first fetch done")
-                #return jsonify({'user':rows[0]})
                 if rows[0] == 0: #meal name does not exist in  menu
                     cur.execute(self.query_2,self.input_2)
                     # close communication with the PostgreSQL database server
@@ -43,17 +40,15 @@ class Menu:
                     # commit the changes
                     conn.commit()
                 else: #meal name already exists      
-                    self.status = 1         #throw error since user exists
-                    
+                    self.status = 1         #throw error since user exists   
             else: #user fetches menu
                 cur.execute(self.query)
                 self.meals = cur.fetchall()
-                print(len(self.meals))
                 self.MENU = []
                 for i in range(len(self.meals)):
                     self.MENU.append({'meal_id':self.meals[i][0],
                                 'meal_name':self.meals[i][1],
-                                'meal_price':str(self.meals[i][2])
+                                'meal_price':str(self.meals[i][2])     #Decimal type not JSON seriailzable
                                 })
                 cur.close()
                 # commit the changes
