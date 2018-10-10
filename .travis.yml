@@ -4,12 +4,11 @@ python:
     - "3.6"
 
 install:
-    - pip install -r requirements.txt
+ - pip install -r requirements.txt
 before_script:
-  - psql -c 'create database fast_food_fast;' -U postgres
-  - python api/v2/init_db.py
+  - psql -U postgres < tests/v2/travis.sql
 script:
-    - pytest tests 
+    - pytest tests
 services:
   - postgresql
 after_success:

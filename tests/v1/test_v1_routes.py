@@ -1,7 +1,8 @@
 """THis python module tests responses for api_v1.py file"""
 import json
-from api import APP
+from api import create_app
 
+APP = create_app('testing')
 TESTER = APP.test_client()
 
 def test_get_specific_order_before_posting():

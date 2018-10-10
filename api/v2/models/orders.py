@@ -137,7 +137,6 @@ class Orders:
                 conn.close()
             else:    #event is admin update specific order
                 #first get number of orders
-                print(self.input[0])
                 cur.execute(self.query_1)
                 number_of_orders = cur.fetchone()
                 if self.order_id in range(1,number_of_orders[0]+1):
@@ -170,34 +169,3 @@ class Orders:
         finally:
             if conn is not None:
                 conn.close()
-"""       
-def user_orders():
-    if request.method == 'POST':  #a user can place an order
-        meal_name = request.json.get('meal_name')
-        order_delivery_address = request.json.get('order_address')
-        order_quantity = request.json.get('order_quantity'),
-        order_contact = request.json.get('order_contact'),
-        conn = None
-        try:
-            conn = psycopg2.connect( host=hostname, user=username, password=password, dbname=database )
-
-            cur = conn.cursor()
-            #First let's get price for the meal from the MENU table
-            query_1 = "SELECT * FROM menu WHERE meal_name=%s"
-            cur.execute(query_1,meal_name)
-            meal_price = cur.fetchone()
-            #order_price = int(order_quantity)*meal_price[0]
-            query_2 = INSERT INTO public.orders (order_price,order_delivery_address,order_quantity,
-                        #order_contact,order_status,user_id, meal_name) VALUES (%s,%s,%s,%s,%s,%s,%s)
-                
-            values = (500, order_delivery_address, order_quantity,order_contact,"New",user_id,meal_price)
-                
-            cur.execute(query_2,values)
-            
-            cur.close()
-            conn.commit()
-            conn.close()
-            return jsonify({"message": "Order posted successfully."})
-        except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
-            return jsonify({"message": "Unable to place order"})"""
