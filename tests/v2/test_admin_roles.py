@@ -68,7 +68,7 @@ def test_update_menu():
     response = tester.post('/api/v2/menu',
                                     content_type="application/json", data=json.dumps(
                                         {
-                                            "meal_name":"pizza",
+                                            "meal_name":"fries",
                                             "meal_price":700.00
                                         })
                                         )
@@ -76,7 +76,7 @@ def test_update_menu():
     response = tester.post('/api/v2/menu',headers={'token': user_token},
                                     content_type="application/json", data=json.dumps(
                                         {
-                                            "meal_name":"pizza",
+                                            "meal_name":"fries",
                                             "meal_price":700.00
                                         })
                                         )
@@ -94,7 +94,7 @@ def test_place_order():
     response = tester.post('/api/v2/users/orders',
                                     content_type="application/json", data=json.dumps(
                                         {
-                                            "meal_name":"pizza",
+                                            "meal_name":"fries",
                                             "order_address" : "Andela",
                                             "order_quantity" : "2",
                                             "order_contact" : 720682290
@@ -104,7 +104,7 @@ def test_place_order():
     response = tester.post('/api/v2/users/orders',headers={'token': user_token},
                                     content_type="application/json", data=json.dumps(
                                         {
-                                            "meal_name":"pizza",
+                                            "meal_name":"fries",
                                             "order_address" : "Andela",
                                             "order_quantity" : "2",
                                             "order_contact" : 720682290
