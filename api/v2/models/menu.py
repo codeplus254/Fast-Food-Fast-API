@@ -35,7 +35,7 @@ class Menu:
                 cur.execute(self.query_1,self.input_1)
                 rows = cur.fetchone()
                 print("first fetch done")
-                #return jsonify({'user':rows[0]})
+                print('user'+str(rows[0])
                 if rows[0] == 0: #meal name does not exist in  menu
                     cur.execute(self.query_2,self.input_2)
                     print("updated menu")
@@ -45,7 +45,7 @@ class Menu:
                     conn.commit()
                 else: #meal name already exists      
                     self.status = 1         #throw error since user exists
-                    
+                print("finally updated menu")    
             else: #user fetches menu
                 cur.execute(self.query)
                 self.meals = cur.fetchall()
