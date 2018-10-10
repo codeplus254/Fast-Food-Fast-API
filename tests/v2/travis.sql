@@ -37,3 +37,4 @@ GRANT ALL PRIVILEGES ON TABLE menu TO tester;
 GRANT ALL PRIVILEGES ON TABLE orders TO tester;
 --enable user tester to access curval and nextvar functions ie. in serial
 GRANT USAGE ON SEQUENCE menu_meal_id_seq TO tester;
+GRANT USAGE ON SEQUENCE orders_order_id_seq TO tester;
