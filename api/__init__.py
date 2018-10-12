@@ -3,7 +3,7 @@ import os
 import sys
 sys.path.insert(0,r'C:\Users\Ronny\fast-food-fast')
 from flask import Flask
-from flask_cors import CORS
+#from flask_cors import CORS
 from config import app_config
 from api.v1.views import mod 
 from api.v2.views import mod
@@ -17,8 +17,8 @@ def create_app(config_name):
     #APP = Flask(__name__, instance_relative_config=True)
     APP = Flask(__name__)
     configuration = app_config[config_name]()
-    cors = CORS(APP)
-    APP.config['CORS_HEADERS'] = 'Content-Type'
+    #cors = CORS(APP)
+    #APP.config['CORS_HEADERS'] = 'Content-Type'
     APP.config.from_object(configuration)
     os.environ['DATABASENAME'] = configuration.database
     create_tables()

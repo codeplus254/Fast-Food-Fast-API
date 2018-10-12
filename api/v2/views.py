@@ -2,7 +2,7 @@
 #import sys
 #sys.path.insert(0,r'C:\Users\Ronny\fast-food-fast')
 from flask import Flask, jsonify, request, make_response, Blueprint
-from flask_cors import CORS, cross_origin
+#from flask_cors import CORS, cross_origin
 import jwt
 import datetime
 import os
@@ -212,7 +212,7 @@ def logout():
     return jsonify({"Message":user.message})
 
 @mod.route('/auth/signup', methods=['POST'])
-@cross_origin()
+#@cross_origin()
 def signup():
     global user_id,email,user_name,user_password
     email = request.json.get('email')
