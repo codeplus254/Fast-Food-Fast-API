@@ -1,0 +1,119 @@
+body {
+  padding:50px 30px;
+  background:#DCC7AA;
+}
+
+#logo{
+  color: #722f37;
+  text-decoration: overline;
+  font-size: 3em;
+  font-stretch: extra-expanded;
+  font-style: italic;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-weight: 900;
+  text-shadow: #EDEDED 3px 2px 0;
+  
+  text-align: center;
+}
+/* Style the tabs */
+.tabs {
+  overflow: hidden;
+  margin:0 30px;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+  width: fit-content;
+}
+/* Style the buttons inside the tab */
+.tabs input {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+/* Change background color of buttons on hover */
+.tabs input:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tabs input.active {
+  background-color: #ccc;
+}
+/* tab contents */
+
+#sign_up{
+  padding:0 30px;
+}
+#sign_in{
+  padding:0 30px;
+  /*display:none;*/
+}
+#order_food{
+  padding: 0 30px;
+  /*display:none;*/
+}
+#admin{
+  padding: 0 30px;
+  /*display:none;*/
+}
+/* Full-width input fields */
+input[type=email], input[type=text],input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+
+input[type=email]:focus,input[type=text]:focus, input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+/*styling the orderFood.html */
+/* stle images of possible foods to be ordered */
+#order_food input[type=image] {
+  width: 100px;
+  height:50px;
+  padding-left: 15px;
+}
+#order_food input[type=checkbox] {
+  width: 100px;
+  height:50px;
+  padding: 15px;
+}
+
+/* style list of order items*/
+ol {
+  
+  padding: 20px;
+}
+
+
+
+ol li {
+  
+  padding: 5px;
+  margin-left: 35px;
+}
+ol li select option{
+  padding-left: 20px;
+}
+
+/*style the user_history.html page */
+#user_history{
+  padding: 10px 30px;
+}
+#checkoutTable{
+  padding: 0 30px;
+  text-align: left;
+}
+#checkoutTable td, th {
+  border: 1px solid #fc0303;
+  text-align: left;
+  padding: 8px;
+}

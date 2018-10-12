@@ -1,0 +1,49 @@
+<!--Order food page-->
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Fast-Food-Fast</title>
+        
+        <link rel="stylesheet" type="text/css" media="all" href="css/main.css">
+        <script src="js/main.js"></script>
+
+	</head>
+	<body >
+            <h1 id="logo">Fast-Food Fast</h1>
+                <div class="tabs">
+                    <input id="signUpBtn" onClick="window.location.href='index.html';signUpFunction()" type="button" value="Sign Up" />
+                    <input id="signInBtn" onClick="window.location.href='sign_in.html';signInFunction()" type="button" value="Sign In" />
+                    <input id="orderFoodBtn" onclick="window.location.href='orderFood.html'" type="button" value="Order Food" />
+                    <input id="adminBtn"  onclick="window.location.href='admin.html'" type="button" value="Admin" />
+                    <input id="userHistoryBtn"  onclick="window.location.href='user_history.html'" type="button" value="User History" />
+                   
+                </div>
+                <div id="order_food" class="tabcontents">
+                    <form id="orderFood_form" onsubmit= "orderFood() " action="admin.html"  method="post" novalidate>
+            
+                        <h2>Order Food</h2>
+                        <input type="checkbox" name="Burger and Hamketchup" value="350"><input type="image" src="images/burger_and_hamketchup.jpeg" alt="Burger and Hamketchup" >Tasty Burger and Ham Ketchup<br>
+                        <input type="checkbox" name="Five Bake Donuts" value="500"><input type="image" src="images/five_bake_donuts.jpeg" alt="Five Bake Donuts" >Five Bake Donuts<br>
+                        <input type="checkbox" name="Fresh Salad" value="100"><input type="image" src="images/fresh_salad.jpeg" alt="Fresh Salad" >Fresh Salad<br>
+                        <input type="checkbox" name="Fried Meat" value="750"><input type="image" src="images/fried_meat.jpeg" alt="Fried Meat" >Fried Meat<br>
+                        <input type="checkbox" name="Fries and Burger" value="450"><input type="image" src="images/fries_and_burger.jpeg" alt="Fries and Burger" >Fries and Burger<br>
+                        <input type="checkbox" name="Hamburger" value="200"><input type="image" src="images/hamburger.jpeg" alt="Hamburger" >Hamburger<br>
+                        <input type="checkbox" name="Healthy Burger" value="150"><input type="image" src="images/healthy_burger.jpeg" alt="Healthy Burger" >Healthy Burger<br>
+                        <input type="checkbox" name="Meat Burger" value="200"><input type="image" src="images/meat_burger.jpg" alt="Meat Burger" >Meat Burger<br>
+                        <input type="checkbox" name="Pizza with egg" value="750"><input type="image" src="images/pizza_with_egg.jpeg" alt="Pizza with egg" >Pizza with egg<br>
+                        <input type="checkbox" name="Popcorn" value="100"><input type="image" src="images/popcorn.jpeg" alt="Popcorn" >Popcorn<br>
+                        <input type="checkbox" name="Sliced Cheeseburger" value="250"><input type="image" src="images/sliced_cheeseburger.jpeg" alt="Sliced Cheeseburger" >Sliced Cheeseburger<br>
+                        <input type="checkbox" name="Pepperoni Pizza" value="950"><input type="image" src="images/pepperoni_pizza.jpeg" alt="Pepperoni Pizza" >Pepperoni Pizza<br>
+
+                        
+                        
+                        
+                        <div class="tabs">
+                                <input type="reset" value="Reset" />
+                                <input type="submit" value="Check Out" />
+                        </div>
+                    </form>
+                </div>
+    </body>
+</html>
