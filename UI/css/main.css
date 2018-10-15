@@ -103,7 +103,22 @@ ol li {
 ol li select option{
   padding-left: 20px;
 }
+/*style the menu.html */
+#menu{
+  padding: 10px 30px;
+}
+#food-menu{
+  padding: 0 30px;
+  text-align: left;
+  
+}
+#food-menu tbody {color:green;}
 
+#food-menu td, th {
+  border: 1px solid #722f37;
+  text-align: left;
+  padding: 8px;
+}
 /*style the user_history.html page */
 #user_history{
   padding: 10px 30px;
