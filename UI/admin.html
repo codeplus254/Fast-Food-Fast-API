@@ -1,0 +1,70 @@
+<!-- admin page -->
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Fast-Food-Fast</title>
+        
+        <link rel="stylesheet" type="text/css" media="all" href="css/main.css">
+        <script src="js/main.js"></script>
+
+	</head>
+	<body >
+            <h1 id="logo">Fast-Food Fast</h1>
+                <div class="tabs">
+                    <input id="signUpBtn" onClick="window.location.href='index.html';signUpFunction()" type="button" value="Sign Up" />
+                    <input id="signInBtn" onClick="window.location.href='sign_in.html';signInFunction()" type="button" value="Sign In" />
+                    <input id="orderFoodBtn" onclick="window.location.href='orderFood.html'" type="button" value="Order Food" />
+                    <input id="adminBtn"  onclick="window.location.href='admin.html'" type="button" value="Admin" />
+                    <input id="userHistoryBtn"  onclick="window.location.href='user_history.html'" type="button" value="User History" />
+                   
+                </div>
+                <div id="admin" class="tabcontents">
+                    <form id="admin_form" onsubmit= "adminConfirm();return false; "  method="post" novalidate>
+            
+                        <h2>Admin Page</h2>
+                        <h3>The user has ordered for:</h3>
+                        <ol>
+                            <li>
+                                
+                                <select id="fresh_salad">
+                                    <option value="Accept">Accept</option>
+                                    <option value="Decline" >Decline</option>
+                                </select>
+                                Fresh Salad
+                            </li>
+                            <li>
+                                    
+                                <select id="popcorn">
+                                    <option value="Accept">Accept</option>
+                                    <option value="Decline" >Decline</option>
+                                </select>
+                                Popcorn
+                            </li>
+                            <li>
+                                    
+                                <select id="fries_and_burger">
+                                        <option value="Accept">Accept</option>
+                                        <option value="Decline" >Decline</option>
+                                </select>
+                                Fries and Burger
+                            </li>
+                            <li>
+                                    
+                                <select id="pepperoni_pizza">
+                                        <option value="Accept">Accept</option>
+                                        <option value="Decline" >Decline</option>
+                                </select>
+                                Pepperoni Pizza
+                            </li>
+
+                        </ol>
+                        
+                        <div class="tabs">
+                                <input type="reset" value="Reset" />
+                                <input type="submit" value="Confirm Order" />
+                        </div>
+                    </form>
+                </div>
+    </body>
+</html>
