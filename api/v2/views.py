@@ -121,9 +121,13 @@ def validate_username(name):
 def user_orders():
     if request.method == 'POST':  #a user can place an order
         meal_name = request.json.get('meal_name')
+        print("fetched: ",meal_name)
         order_delivery_address = request.json.get('order_address')
+        print("fetched: ",order_delivery_address)
         order_quantity = request.json.get('order_quantity')
+        print("fetched: ",str(order_quantity))
         order_contact = request.json.get('order_contact')
+        print("fetched: ",str(order_contact))
         order = Orders(user_id)
         order.place_order(meal_name,order_delivery_address,order_quantity,order_contact)
         order.connect_db()

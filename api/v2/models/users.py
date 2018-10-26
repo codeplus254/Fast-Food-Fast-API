@@ -83,7 +83,10 @@ class Users:
                 cur.execute(self.query_1,self.inputs_1)                 #get user id
                 self.id = cur.fetchone()
                 cur.execute(self.query_2,self.inputs_2)
+                
                 conn.commit()
+                print("database updated")
+                print(database)
                 if self.id == None:     #user id does not exist
                     self.status=1
                     self.token = None
