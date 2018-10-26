@@ -3,7 +3,7 @@ import sys
 from api import create_app
 import os
 from os.path import join, dirname
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 
 # Create .env file path.
 #dotenv_path = join(dirname(__file__), '.env')

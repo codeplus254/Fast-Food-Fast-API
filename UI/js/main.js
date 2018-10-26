@@ -98,7 +98,7 @@ const createMenuTable = (array) =>{
 
 
 }
-const fetchMenu = (token) => {
+const fetchMenu = () => {
     let url = 'http://127.0.0.1:5000/api/v2/menu'
     const options ={
         method: 'GET',
@@ -109,7 +109,75 @@ const fetchMenu = (token) => {
     return fetch(url,options)
     .then(res => res.json())
     .then( res=> {alert(res["Message"]);createMenuTable(res["menu"]);})
-    .catch(error => console.error(`Error: $(error)`))
+    .catch(error => console.error(`Error: ${error}`))
+    
+}
+const availableFood = (select) => {
+    let url = 'http://127.0.0.1:5000/api/v2/menu'
+    const options ={
+        method: 'GET',
+        headers: new Headers({
+            'token': window.sessionStorage.getItem('token')
+        })
+    }
+    return fetch(url,options)
+    .then(res => res.json())
+    .then( res=> {
+                    const select =  document.createElement("select");
+                    const select_food = document.getElementById("available_food");
+                    const form = document.getElementById('orderFood_form');
+                    foods = [];
+                    prices = [];
+                    if (res["menu"].length == 0){   //no food in menu
+                        let error_h2 = document.createElement("h2"); 
+                        let error = document.createTextNode("Sorry, we do not have any food at the moment.");
+                        error_h2.appendChild(error);
+                        form.parentNode.appendChild(error_h2);
+                        form.parentNode.removeChild(form);
+                    }
+                    else {
+                        for (let i=0; i<res["menu"].length; i++){
+                            foods.push(res["menu"][i]["meal_name"]);
+                            let food_option = document.createElement("option"); 
+                            food_option.text=res["menu"][i]["meal_name"];
+                            food_option.value=res["menu"][i]["meal_name"];
+                            select_food.appendChild(food_option);
+                            prices.push(res["menu"][i]["meal_price"])}
+                    }
+        
+                })
+    .catch(error => console.error(`Error: ${error}`))
+    
+}
+const placeOrder = () => {
+    let select = document.getElementById("available_food");
+    let url = 'http://127.0.0.1:5000/api/v2/users/orders';
+    const order = {
+        meal_name:select.options[select.selectedIndex].text,
+        order_address:document.getElementById("address").value,
+        order_quantity:Number(document.getElementById("quantity").value),
+        order_contact:Number(document.getElementById("contact").value)
+    }
+    const order2 = {
+        
+            "meal_name":"fries",
+            "order_address" : "Westlands",
+            "order_quantity" : 2,
+            "order_contact" : 720682290
+        }
+    const options ={
+        method: 'GET',
+        //body: JSON.stringify(order),
+        //body: order2,
+        headers: new Headers({
+            'Content-Type': 'application/json',
+            'token': window.sessionStorage.getItem('token')
+        })
+    }
+    return fetch(url,options)
+    .then(res => {console.log(order);res.json();})
+    .then( res=> {console.log(order);alert(res["Message"]);})
+    .catch(error => {console.error(`Error: ${error}`)})
     
 }
 /*
