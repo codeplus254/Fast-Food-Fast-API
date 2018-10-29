@@ -71,7 +71,10 @@ class Orders:
                 if meal_price is None:
                     self.status = 1
                 
+                print(meal_price[0])
+                print(Decimal(self.quantity))
                 self.price = Decimal(self.quantity) * meal_price[0]
+                
                 self.input_2 = (self.price, self.address, self.quantity,self.contact,"New",self.user_id,self.name)
                 cur.execute(self.query_2,self.input_2)
             

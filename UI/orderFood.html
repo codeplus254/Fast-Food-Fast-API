@@ -20,11 +20,11 @@
                    
                 </div>
                 <div id="order_food" class="tabcontents">
-                    <form id="orderFood_form" onsubmit= "placeOrder() "   method="post" novalidate>
+                    <form id="orderFood_form" method="post" onsubmit="placeOrder();return false" validate>
             
                         <h2>Place your order</h2>
                         <label for="available_food"><b>Food</b></label>
-                        <select id="available_food">
+                        <select id="available_food" >
                         </select>
                         <label for="address"><b>Delivery Point</b></label>
                         <input type="text" placeholder="Enter the delivery address"  id="address" required>

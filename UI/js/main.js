@@ -6,7 +6,7 @@ function signUpFunction(){
 } 
 
 const fetchToken = (user_details,url) => {
-    const options ={
+    let options ={
         method: 'POST',
         body: JSON.stringify(user_details),
         headers: new Headers({
@@ -21,7 +21,7 @@ const fetchToken = (user_details,url) => {
 }
 function fetchSignUpToken() {
     let url = 'http://127.0.0.1:5000/api/v2/auth/signup'
-    const user_details = {
+    let user_details = {
         email:document.getElementsByName("email")[0].value,
         username:document.getElementsByName("username")[0].value,
         password:document.getElementsByName("password")[0].value
@@ -31,7 +31,7 @@ function fetchSignUpToken() {
   }
   function fetchLoginToken() {
     let url = 'http://127.0.0.1:5000/api/v2/auth/login'
-    const user_details = {
+    let user_details = {
         email:document.getElementsByName("email")[0].value,
         username:document.getElementsByName("username")[0].value,
         password:document.getElementsByName("password")[0].value
@@ -42,7 +42,7 @@ function fetchSignUpToken() {
   }  
   function fetchAdminToken() {
     let url = 'http://127.0.0.1:5000/api/v2/admin/login'
-    const user_details = {
+    let user_details = {
         email:document.getElementsByName("email")[0].value,
         username:document.getElementsByName("username")[0].value,
         password:document.getElementsByName("password")[0].value
@@ -100,7 +100,7 @@ const createMenuTable = (array) =>{
 }
 const fetchMenu = () => {
     let url = 'http://127.0.0.1:5000/api/v2/menu'
-    const options ={
+    let options ={
         method: 'GET',
         headers: new Headers({
             'token': window.sessionStorage.getItem('token')
@@ -114,7 +114,7 @@ const fetchMenu = () => {
 }
 const availableFood = (select) => {
     let url = 'http://127.0.0.1:5000/api/v2/menu'
-    const options ={
+    let options ={
         method: 'GET',
         headers: new Headers({
             'token': window.sessionStorage.getItem('token')
@@ -128,6 +128,7 @@ const availableFood = (select) => {
                     const form = document.getElementById('orderFood_form');
                     foods = [];
                     prices = [];
+                    console.log(res["menu"])
                     if (res["menu"].length == 0){   //no food in menu
                         let error_h2 = document.createElement("h2"); 
                         let error = document.createTextNode("Sorry, we do not have any food at the moment.");
@@ -149,77 +150,147 @@ const availableFood = (select) => {
     .catch(error => console.error(`Error: ${error}`))
     
 }
+
 const placeOrder = () => {
     let select = document.getElementById("available_food");
-    let url = 'http://127.0.0.1:5000/api/v2/users/orders';
-    const order = {
+    let url = 'http://127.0.0.1:5000/api/v2/users/orders'
+    let order = {
         meal_name:select.options[select.selectedIndex].text,
         order_address:document.getElementById("address").value,
         order_quantity:Number(document.getElementById("quantity").value),
         order_contact:Number(document.getElementById("contact").value)
+        //"order_contact":720682290
     }
-    const order2 = {
-        
-            "meal_name":"fries",
-            "order_address" : "Westlands",
-            "order_quantity" : 2,
-            "order_contact" : 720682290
-        }
-    const options ={
-        method: 'GET',
-        //body: JSON.stringify(order),
-        //body: order2,
+    let order2 ={
+        "meal_name":"pizza",
+        "order_address":"Westlands",
+        "order_quantity":7,
+        "order_contact":720682290
+    }
+    let options ={
+        method: 'POST',
+        body: JSON.stringify(order),
         headers: new Headers({
-            'Content-Type': 'application/json',
+            'token': window.sessionStorage.getItem('token'),
+            'Content-Type': 'application/json'
+        })
+    }
+    return fetch(url,options)
+    .then(res => res.json())
+    .then( res=> {console.log(res);alert(res["Message"]);})
+    .catch(error => console.error(`Error: ${error}`))
+    
+}
+const createOrderHistoryTable = (array) =>{
+    let user_history = document.getElementById("user_history");
+    let length = array.length
+    if (length == 0){
+        user_history.appendChild(document.createTextNode("You have never ordered for food.")); 
+    }
+    else{ 
+        const orderHistoryTable = document.createElement("div");
+        orderHistoryTable.setAttribute("id", "order-history");
+        let row1 = document.createElement("tr");
+        let header1= document.createElement("th"); 
+        let title1 = document.createTextNode("Name"); 
+        header1.appendChild(title1);
+        row1.appendChild(header1);
+
+        let header2= document.createElement("th"); 
+        let title2 = document.createTextNode("Contact"); 
+        header2.appendChild(title2);
+        row1.appendChild(header2);
+
+        let header3= document.createElement("th"); 
+        let title3 = document.createTextNode("Delivery Address"); 
+        header3.appendChild(title3);
+        row1.appendChild(header3);
+
+        let header4= document.createElement("th"); 
+        let title4 = document.createTextNode("Status"); 
+        header4.appendChild(title4);
+        row1.appendChild(header4);
+
+        let header5= document.createElement("th"); 
+        let title5 = document.createTextNode("Unit(s)"); 
+        header5.appendChild(title5);
+        row1.appendChild(header5);
+
+        let header6= document.createElement("th"); 
+        let title6 = document.createTextNode("Total Price"); 
+        header6.appendChild(title6);
+        row1.appendChild(header6);
+
+        orderHistoryTable.appendChild(row1);
+        user_history.appendChild(orderHistoryTable);
+        let orderHistoryBody= document.createElement("tbody"); 
+        for (let i=0; i<length; i++){
+            let row = document.createElement("tr");
+            let meal_name_cell = document.createElement("td"); 
+            let meal_name = document.createTextNode(array[i]["meal_name"]);
+            meal_name_cell.appendChild(meal_name);
+            row.appendChild(meal_name_cell);
+
+            let order_contact_cell = document.createElement("td"); 
+            let order_contact = document.createTextNode(array[i]["order_contact"]);
+            order_contact_cell.appendChild(order_contact);
+            row.appendChild(order_contact_cell);
+
+            let order_address_cell = document.createElement("td"); 
+            let order_address = document.createTextNode(array[i]["order_delivery_address"]);
+            order_address_cell.appendChild(order_address);
+            row.appendChild(order_address_cell);
+
+            let order_status_cell = document.createElement("td"); 
+            let order_status = document.createTextNode(array[i]["order_status"]);
+            order_status_cell.appendChild(order_status);
+            row.appendChild(order_status_cell);
+
+            let order_quantity_cell = document.createElement("td"); 
+            let order_quantity = document.createTextNode(array[i]["order_quantity"]);
+            order_quantity_cell.appendChild(order_quantity);
+            row.appendChild(order_quantity_cell);
+
+            let order_price_cell = document.createElement("td"); 
+            let order_price = document.createTextNode(array[i]["order_price"]);
+            order_price_cell.appendChild(order_price);
+            row.appendChild(order_price_cell);
+
+            orderHistoryBody.appendChild(row);
+        }
+        orderHistoryTable.appendChild(orderHistoryBody);
+        user_history.appendChild(orderHistoryTable);
+        
+    }
+
+
+}
+const orderHistory = () => {
+    let url = 'http://127.0.0.1:5000/api/v2/users/orders'
+    
+    let options ={
+        method: 'GET',
+        headers: new Headers({
             'token': window.sessionStorage.getItem('token')
         })
     }
     return fetch(url,options)
-    .then(res => {console.log(order);res.json();})
-    .then( res=> {console.log(order);alert(res["Message"]);})
-    .catch(error => {console.error(`Error: ${error}`)})
+    .then(res => res.json())
+    .then( res=> {alert(res["Message"]);createOrderHistoryTable(res["Orders"]);})
+    .catch(error => console.error(`Error: ${error}`))
     
 }
-/*
-function signUpUser() {
+const logout = () =>{
     
-    let x = document.getElementById("signUp_form");
-    //the user email given in form
-    name= document.getElementsByName("email").value;
-    document.getElementById("sign_up").style.display= "none";
-    document.getElementById("sign_in").style.display= "none";
-    document.getElementById("admin").style.display= "none";
-    document.getElementById("order_food").style.display= "block";
-    document.getElementById("orderFoodBtn").className = "active";
-    document.getElementById("signUpBtn").className = "";
-    document.getElementById("signInBtn").className = "";
-    console.log(name);
-    
+    let url = 'http://127.0.0.1:5000/api/v2/logout'
+    const options ={
+        method: 'GET',
+        headers: new Headers({
+            'token': window.sessionStorage.getItem('token')
+        })
+    }
+    return fetch(url,options)
+    .then(res => res.json())
+    .then( res=> {alert(res["Message"]);sessionStorage.clear();})
+    .catch(error => console.error(`Error: ${error}`))
 }
-function signInUser() {
-    
-    let x = document.getElementById("signIn_form");
-      //the user email given in form
-    name= document.getElementsByName("email").value;
-    document.getElementById("sign_up").style.display= "none";
-    document.getElementById("sign_in").style.display= "none";
-    document.getElementById("admin").style.display= "none";
-    document.getElementById("order_food").style.display= "block";
-    document.getElementById("orderFoodBtn").className = "active";
-    document.getElementById("signUpBtn").className = "";
-    document.getElementById("signInBtn").className = "";
-    console.log(name);
-    
-}
-function orderFood() {
-    console.log(name);
-    document.getElementById("sign_up").style.display= "none";
-    document.getElementById("sign_in").style.display= "none";
-    document.getElementById("order_food").style.display= "none";
-    document.getElementById("admin").style.display= "block";
-
-
-    let data = document.getElementById("orderFood_form");
-    document.getElementById("Items").innerHTML=data.elements;
-
-}*/
