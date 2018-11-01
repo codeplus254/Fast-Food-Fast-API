@@ -100,13 +100,10 @@ def validate_password(passwd):
     
     return valid
 def validate_email(email):
-    print("validating email")
     valid=True
     EMAIL_REGEX = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
-    print("before if in email regex")
     if not EMAIL_REGEX.match(email):
         valid = False
-    print("email is:" + str(valid))
     return valid
 def validate_username(name):
     valid = True
@@ -121,13 +118,9 @@ def validate_username(name):
 def user_orders():
     if request.method == 'POST':  #a user can place an order
         meal_name = request.json.get('meal_name')
-        print("fetched: ",meal_name)
         order_delivery_address = request.json.get('order_address')
-        print("fetched: ",order_delivery_address)
         order_quantity = request.json.get('order_quantity')
-        print("fetched: ",str(order_quantity))
         order_contact = request.json.get('order_contact')
-        print("fetched: ",str(order_contact))
         order = Orders(user_id)
         order.place_order(meal_name,order_delivery_address,order_quantity,order_contact)
         order.connect_db()
@@ -286,10 +279,11 @@ def admin_signup_others():
     valid_password = validate_password(user_password)
     valid_email = validate_email(email)
     valid_name = validate_username(user_name)
+    print("email is",valid_email)
     if valid_password==True and valid_email==True and valid_name==True:
+        print("password is",valid_password)
         user = Users(email, user_name, user_password,user_admin)
         user.hash()
-        #user.admin_token() #overrides the user token given above
         user.signup()
         user.connect_db()
         if user.status == 0:

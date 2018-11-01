@@ -11,6 +11,12 @@
 	</head>
 	<body >
             <h1 id="logo">Fast-Food Fast</h1>
+                <div class="admin_tabs">
+                    <input id="adminSignupOthers"  onclick="window.location.href='admin_sign_up_others.html'" type="button" value="Signup Others" />
+                    <input id="updateMenu"  onclick="window.location.href='menu.html'" type="button" value="Update Menu" />
+                    <input id="allOrders"  onclick="window.location.href='orderFood.html'" type="button" value="All Orders" />
+                    <input id="specificOrder"  onclick="window.location.href='orderFood.html'" type="button" value="Specific Order" />
+                </div>
                 <div class="tabs">
                     <input id="signUpBtn" onClick="window.location.href='index.html';signUpFunction()" type="button" value="Sign Up" />
                     <input id="signInBtn" onClick="window.location.href='sign_in.html';signInFunction()" type="button" value="Sign In" />
@@ -19,6 +25,7 @@
                     <input id="userHistoryBtn"  onclick="orderHistory()" type="button" value="User History" />
                     
                 </div>
+                
                 <div id = "user_history">
                            
                 </div>

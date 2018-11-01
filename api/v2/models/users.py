@@ -21,7 +21,7 @@ class Users:
         self.password = password
         passwd = self.password + salt
         self.passwd_hash = hashlib.md5(passwd.encode())
-        self.admin = admin
+        self.admin = admin #true or false
         self.token = jwt.encode({'admin':admin,
                 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=15)}, 
                 secret_key)
@@ -85,8 +85,6 @@ class Users:
                 cur.execute(self.query_2,self.inputs_2)
                 
                 conn.commit()
-                print("database updated")
-                print(database)
                 if self.id == None:     #user id does not exist
                     self.status=1
                     self.token = None
