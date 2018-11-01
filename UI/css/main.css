@@ -16,7 +16,7 @@ body {
   text-align: center;
 }
 /* Style the tabs */
-.tabs {
+.tabs,.admin_tabs {
   overflow: hidden;
   margin:0 30px;
   border: 1px solid #ccc;
@@ -24,7 +24,7 @@ body {
   width: fit-content;
 }
 /* Style the buttons inside the tab */
-.tabs input {
+.tabs input,.admin_tabs input {
   background-color: inherit;
   float: left;
   border: none;
@@ -35,12 +35,12 @@ body {
   font-size: 17px;
 }
 /* Change background color of buttons on hover */
-.tabs input:hover {
+.tabs input:hover,.admin_tabs input:hover {
   background-color: #ddd;
 }
 
 /* Create an active/current tablink class */
-.tabs input.active {
+.tabs input.active,.admin_tabs input.active {
   background-color: #ccc;
 }
 /* tab contents */

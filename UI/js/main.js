@@ -16,7 +16,7 @@ const fetchToken = (user_details,url) => {
     return fetch(url,options)
     .then(res => res.json())
     .then( res=> {token = res["token"];window.sessionStorage.setItem('token', token);alert(res["Message"]);})
-    .catch(error => console.error(`Error: $(error)`))
+    .catch(error => console.error(`Error: ${error}`))
     
 }
 function fetchSignUpToken() {
@@ -51,6 +51,59 @@ function fetchSignUpToken() {
     let token = window.sessionStorage.getItem('token')
     console.log(token)
   } 
+  function adminSignupOthers() {
+    let url = 'http://127.0.0.1:5000/api/v2/admin/signup'
+    let select = document.getElementById("admin_status");
+    let user_details = {
+        email:document.getElementsByName("email")[0].value,
+        username:document.getElementsByName("username")[0].value,
+        password:document.getElementsByName("password")[0].value,
+        admin:Number(select.options[select.selectedIndex].value)
+    }
+    let options ={
+        method: 'POST',
+        body: JSON.stringify(user_details),
+        headers: new Headers({
+            'Content-Type': 'application/json',
+            'token': window.sessionStorage.getItem('token')
+        })
+    }
+    return fetch(url,options)
+    .then(res => res.json())
+    .then( res=> {alert(res["Message"]);})
+    .catch(error => console.error(`Error: ${error}`))
+  }
+  const adminSignupOthers2 = () => {
+    let url = 'http://127.0.0.1:5000/api/v2/admin/login'
+    let select = document.getElementById("admin_status");
+    let user_details = {
+        email:document.getElementsByName("email")[0].value,
+        username:document.getElementsByName("username")[0].value,
+        password:document.getElementsByName("password")[0].value,
+        admin:Number(select.options[select.selectedIndex].value)
+    }
+    console.log(user_details)
+    let options ={
+        method: 'POST',
+        body: JSON.stringify(user_details),
+        headers: new Headers({
+            
+            'token': window.sessionStorage.getItem('token'),
+            'Content-Type': 'application/json'
+
+        })
+    }
+    fetchToken(user_details,url)
+    let token = window.sessionStorage.getItem('token')
+    console.log(token)
+    /*
+    console.log(options)
+    return fetch(url,options)
+    .then(res => res.json())
+    .then( res=> {alert(res["Message"]);})
+    .catch(error => console.error(`Error: ${error}`))*/
+    
+}
 function signInFunction() {
     document.getElementById("signUpBtn").className = "";
     document.getElementById("signInBtn").className = "active";
@@ -159,13 +212,7 @@ const placeOrder = () => {
         order_address:document.getElementById("address").value,
         order_quantity:Number(document.getElementById("quantity").value),
         order_contact:Number(document.getElementById("contact").value)
-        //"order_contact":720682290
-    }
-    let order2 ={
-        "meal_name":"pizza",
-        "order_address":"Westlands",
-        "order_quantity":7,
-        "order_contact":720682290
+        
     }
     let options ={
         method: 'POST',
