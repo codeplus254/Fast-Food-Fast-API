@@ -23,10 +23,25 @@
                     <input id="menuBtn"  onclick="fetchMenu();return false;" type="button" value="Menu" />
                     <input id="logOutBtn"  onclick="window.location.href='log_out.html';logout()" type="button" value="Log Out" />
                 </div>
+                <div class="admin_only">
+                    <form id="update_menu_form" onsubmit= "updateMenu();return false"  method="post" novalidate>
                 
+                        <h2>Sign In</h2>
+                        <label for="meal_name"><b>Meal Name</b></label>
+                        <input type="text" placeholder="Enter meal name"  name="meal_name" required>
+                        <label for="meal_price"><b>Meal Price</b></label>
+                        <input type="number" min="1" step="any" placeholder="Enter the meal price"  name="meal_price" required>
+
+                        <div class="tabs">
+                                <input type="reset" value="Reset" />
+                                <input type="submit" value="Update Menu" />
+                        </div>
+                    </form>
+                </div>
                 <div id = "menu">
                    
                 </div>
+                
                 
     </body>
 
