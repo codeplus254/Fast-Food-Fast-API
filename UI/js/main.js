@@ -93,6 +93,7 @@ function updateMenu(){
     .then( res=> {alert(res["Message"]);})
     .catch(error => console.error(`Error: ${error}`))
 }
+
 function signInFunction() {
     document.getElementById("signUpBtn").className = "";
     document.getElementById("signInBtn").className = "active";
@@ -154,6 +155,8 @@ const fetchMenu = () => {
     .catch(error => console.error(`Error: ${error}`))
     
 }
+
+
 const availableFood = (select) => {
     let url = 'http://127.0.0.1:5000/api/v2/menu'
     let options ={
@@ -217,16 +220,22 @@ const placeOrder = () => {
     .catch(error => console.error(`Error: ${error}`))
     
 }
-const createOrderHistoryTable = (array) =>{
-    let user_history = document.getElementById("user_history");
+const createOrderHistoryTable = (html_div,array) =>{
+    
     let length = array.length
     if (length == 0){
-        user_history.appendChild(document.createTextNode("You have never ordered for food.")); 
+        user_history.appendChild(document.createTextNode("No ordered placed.")); 
     }
     else{ 
         const orderHistoryTable = document.createElement("div");
         orderHistoryTable.setAttribute("id", "order-history");
         let row1 = document.createElement("tr");
+
+        let header0= document.createElement("th"); 
+        let title0 = document.createTextNode("Order ID"); 
+        header0.appendChild(title0);
+        row1.appendChild(header0);
+
         let header1= document.createElement("th"); 
         let title1 = document.createTextNode("Name"); 
         header1.appendChild(title1);
@@ -258,10 +267,16 @@ const createOrderHistoryTable = (array) =>{
         row1.appendChild(header6);
 
         orderHistoryTable.appendChild(row1);
-        user_history.appendChild(orderHistoryTable);
+        html_div.appendChild(orderHistoryTable);
         let orderHistoryBody= document.createElement("tbody"); 
         for (let i=0; i<length; i++){
             let row = document.createElement("tr");
+
+            let order_id_cell = document.createElement("td"); 
+            let order_id = document.createTextNode(array[i]["order_id"]);
+            order_id_cell.appendChild(order_id);
+            row.appendChild(order_id_cell); 
+
             let meal_name_cell = document.createElement("td"); 
             let meal_name = document.createTextNode(array[i]["meal_name"]);
             meal_name_cell.appendChild(meal_name);
@@ -295,7 +310,7 @@ const createOrderHistoryTable = (array) =>{
             orderHistoryBody.appendChild(row);
         }
         orderHistoryTable.appendChild(orderHistoryBody);
-        user_history.appendChild(orderHistoryTable);
+        html_div.appendChild(orderHistoryTable);
         
     }
 
@@ -303,7 +318,7 @@ const createOrderHistoryTable = (array) =>{
 }
 const orderHistory = () => {
     let url = 'http://127.0.0.1:5000/api/v2/users/orders'
-    
+    let html_div = document.getElementById("user_history");
     let options ={
         method: 'GET',
         headers: new Headers({
@@ -312,7 +327,22 @@ const orderHistory = () => {
     }
     return fetch(url,options)
     .then(res => res.json())
-    .then( res=> {alert(res["Message"]);createOrderHistoryTable(res["Orders"]);})
+    .then( res=> {alert(res["Message"]);createOrderHistoryTable(html_div,res["Orders"]);})
+    .catch(error => console.error(`Error: ${error}`))
+    
+}
+const fetchAllOrders = () => {
+    let url = 'http://127.0.0.1:5000/api/v2/orders'
+    let html_div = document.getElementById("all_orders");
+    let options ={
+        method: 'GET',
+        headers: new Headers({
+            'token': window.sessionStorage.getItem('token')
+        })
+    }
+    return fetch(url,options)
+    .then(res => res.json())
+    .then( res=> {alert(res["Message"]);createOrderHistoryTable(html_div,res["Orders"]);})
     .catch(error => console.error(`Error: ${error}`))
     
 }
