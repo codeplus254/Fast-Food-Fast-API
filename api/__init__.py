@@ -1,7 +1,6 @@
 """This python file is responsible for creating the app"""
 import os
 import sys
-sys.path.insert(0,r'C:\Users\Ronny\fast-food-fast')
 from flask import Flask
 from flask_cors import CORS
 from config import app_config
